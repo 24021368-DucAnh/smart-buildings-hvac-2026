@@ -1,5 +1,8 @@
 # Smart Buildings Foundation Model Competition — Starter Kit
 
+> **Nhóm A/B/C:** [Hướng dẫn dự án và quy trình Git](team/README.md). Phần bên dưới là tài liệu starter kit chính thức.
+
+
 Develop a single control policy that operates the HVAC systems of commercial
 buildings across a range of layouts and weather conditions, deciding when to
 run each air handler and the hot-water pump, setting their temperature and
