@@ -38,3 +38,11 @@ smart_buildings/test_buildings/
 smart_buildings/test_scenarios/
 **/holdout*/
 **/test_set*/
+
+# Team generated artifacts and credentials
+artifacts/
+data/generated/
+.env
+.env.*
+!.env.example
+.kaggle/
