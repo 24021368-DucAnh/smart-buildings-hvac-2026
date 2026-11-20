@@ -19,7 +19,8 @@ class ZoneController:
     def __init__(
         self,
         building_meta_data: Mapping[str, Any],
-        zone_damper_full_k: float = 2.0,
+        zone_damper_full_k: float = 2.0, 
+        zone_reheat_full_k: float = 2.0,
     ) -> None:
         """Khởi tạo một lần cho mỗi tòa nhà.
         
@@ -29,6 +30,7 @@ class ZoneController:
         """
         self.metadata = building_meta_data
         self.zone_damper_full_k = zone_damper_full_k
+        self.zone_reheat_full_k = zone_reheat_full_k
 
         # 1. Cửa sổ nhiệt độ tiện nghi và tiết kiệm
         self.comfort_temp_window = building_meta_data["comfort_temp_window"]
@@ -127,6 +129,10 @@ class ZoneController:
 
             # 2. Điều khiển van sưởi (reheat valve)
             if reheat_idx is not None:
-                continuous[reheat_idx] = 1.0 if zone_error > 0 else -1.0
+                if zone_error > 0:
+                    reheat_ratio = min(1.0, abs(zone_error) / self.zone_reheat_full_k)
+                    continuous[reheat_idx] = 2.0 * reheat_ratio - 1.0
+                else: 
+                    continuous[reheat_idx] = - 1.0
 
         return action
