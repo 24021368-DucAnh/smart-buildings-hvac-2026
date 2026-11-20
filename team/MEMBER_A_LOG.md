@@ -28,3 +28,17 @@
   - `pid`: -1362.92
   - Kết luận: Hai kết quả bằng nhau -> việc tách module riêng hoàn thành, đường truyền dữ liệu thông suốt, và có thể bắt đầu thay đổi công thức van để diều chỉnh điểm.
 ---
+- **Phiên 3**
+- **Thời gian:** 12:21 (20/11/2026) – 15:43 (20/11/2026) (Tổng phiên 3: 3h20p)
+- **Công việc đã làm:**
+  - Thử nghiệm: Làm mịn van sưởi nước nóng (reheat_valve) trong `zone_controller.py` (chuyển từ bật/tắt sang mở tỉ lệ theo độ lệch nhiệt độ).
+  - Chạy đo điểm kiểm chứng trên kịch bản thời tiết lạnh: building_train_1 / fairbanks_1.
+- **Minh chứng & Kết quả thực tế:**
+  - pid (bản gốc của BTC): -1362.92
+  - member_a (sau khi làm mịn van sưởi): -1521.09
+  - Kết quả: Điểm số bị tụt ~158 điểm.
+  - Nguyên nhân: do trong kịch bản fairbanks cực kỳ lạnh, nhiệt độ phòng giảm rất nhanh, khi làm mịn van sưởi (lệch ít chỉ mở 20-30%) lượng nước nóng cấp vào ko đủ mạnh để bù nhiệt mất
+  --> Phòng sẽ bị ấm lên rất chậm -> điểm phạt comfort tích lũy làm tổng điểm kém đi nhiều.
+- **Rút ra:**
+  - Với thời tiết lạnh, sưởi cần dứt khoát như thuật toán pid của btc (tức là đóng mở 100% công suất)
+  - Hướng khắc phục: rút ngắn ngưỡng mở sưởi max công suất từ 2 -> 0.4 - 0.5 hoặc có thể đổi sang điều chỉnh van gió mát(damper)
