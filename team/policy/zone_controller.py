@@ -65,7 +65,17 @@ class ZoneController:
                 obs_idx = zone_temp_field_index[temp_field]
                 damper_idx = actions.get("supply_air_damper_percentage_command")
                 reheat_idx = actions.get("reheat_valve_percentage_command")
-                self.zones.append((vav_id, obs_idx, damper_idx, reheat_idx))
+
+                # Lưu lại cảm biến của từng phòng 
+                # Độ ấm bé nhất
+                heat_sp_field = f"{vav_id}_zone_air_heating_temperature_setpoint_sensor"
+                # Độ mát lớn nhất
+                cool_sp_field = f"{vav_id}_zone_air_cooling_temperature_setpoint_sensor"
+                # Lưu Vị trí 2 cảm biến, để đọc trực tiếp từ obs
+                heat_sp_idx = field_names.index(heat_sp_field) if heat_sp_field in field_names else None
+                cool_sp_idx = field_names.index(cool_sp_field) if cool_sp_field in field_names else None
+                
+                self.zones.append((vav_id, obs_idx, damper_idx, reheat_idx, heat_sp_idx, cool_sp_idx))
 
     def _denormalize_temp(self, normalized_val: float) -> float:
         """Đưa giá trị nhiệt độ quan sát về độ Kelvin thực tế."""
@@ -107,32 +117,40 @@ class ZoneController:
             Dict action đã được cập nhật vùng van phòng của A.
         """
         continuous = action["continuous_action"]
-        low, high = self._get_target_band(obs)
+        low_default, high_default = self._get_target_band(obs)
 
-        for _, obs_idx, damper_idx, reheat_idx in self.zones:
+        for _, obs_idx, damper_idx, reheat_idx, heat_sp_idx, cool_sp_idx in self.zones:
+            # Giải chuẩn hóa nhiệt độ
             temp_k = self._denormalize_temp(obs[obs_idx])
 
+            # Láy setpoint nếu cảm biến đo được, ko thì lấy default
+            low = float(obs[heat_sp_idx,]) if heat_sp_idx is not None else low_default
+            high = float(obs[cool_sp_idx,]) if cool_sp_idx is not None else high_default
+            if not (np.isfinite(low) and np.isfinite(high) and low < high):
+                low, high = low_default, high_default
+
             # Tính sai số nhiệt độ:
-            # > 0 nếu phòng lạnh dưới sàn low (cần sưởi)
-            # < 0 nếu phòng nóng vượt trần high (cần làm mát)
-            if temp_k < low:
-                zone_error = low - temp_k
-            elif temp_k > high:
-                zone_error = high - temp_k
+            error_heat = max(0.0, low - temp_k)
+            error_cool = max(0.0, temp_k - high)
+
+            #  Điều khiển 2 van
+            # Nếu đang bị lạnh
+            if error_heat > 0:
+                if reheat_idx is not None:
+                    heat_ratio = min (1.0, error_heat / self.zone_reheat_full_k)
+                    continuous[reheat_idx] = 2.0 * heat_ratio - 1.0
+                if damper_idx is not None:
+                    continuous[damper_idx] = -1.0
+            # Nếu đang nóng
+            elif error_cool > 0:
+                if reheat_idx is not None:
+                    continuous[reheat_idx] = -1.0
+                if damper_idx is not None:
+                    cool_ratio = min(1.0, error_cool / self.zone_damper_full_k)
+                    continuous[damper_idx] = 2.0 * cool_ratio - 1.0
             else:
-                zone_error = 0.0
-
-            # 1. Điều khiển van gió mát (damper)
-            if damper_idx is not None:
-                damper_ratio = min(1.0, abs(zone_error) / self.zone_damper_full_k)
-                continuous[damper_idx] = 2.0 * damper_ratio - 1.0
-
-            # 2. Điều khiển van sưởi (reheat valve)
-            if reheat_idx is not None:
-                if zone_error > 0:
-                    reheat_ratio = min(1.0, abs(zone_error) / self.zone_reheat_full_k)
-                    continuous[reheat_idx] = 2.0 * reheat_ratio - 1.0
-                else: 
-                    continuous[reheat_idx] = - 1.0
-
+                if reheat_idx is not None:
+                    continuous[reheat_idx] = -1.0
+                if damper_idx is not None:
+                    continuous[damper_idx] = -1.0
         return action

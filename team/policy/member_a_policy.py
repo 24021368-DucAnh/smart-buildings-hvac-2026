@@ -25,7 +25,7 @@ class MemberAPolicy(PIDWaterResetPolicy):
         super().__init__(building_meta_data, action_spec, **kwargs)
         # Khởi tạo module điều khiển phòng độc lập của A
         self.zone_controller = ZoneController(building_meta_data)
-
+    # ghi đè lại hàm trong pid_plus
     def _command_zones(
         self,
         continuous: np.ndarray,
