@@ -7,11 +7,11 @@ bằng module ZoneController độc lập của Thành viên A.
 from typing import Any
 import numpy as np
 
-from smart_buildings.baselines.pid import PIDPolicy
+from smart_buildings.baselines.pid_plus  import PIDWaterResetPolicy
 from team.policy.zone_controller import ZoneController
 
 
-class MemberAPolicy(PIDPolicy):
+class MemberAPolicy(PIDWaterResetPolicy):
     """Policy kết hợp: Máy tổng dùng base PID, Từng phòng dùng ZoneController của A."""
 
     name = "member_a"
