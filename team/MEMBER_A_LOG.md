@@ -1,9 +1,48 @@
 # NHẬT KÝ CÔNG VIỆC — THÀNH VIÊN A (ZONE & VAV)
 
+---
+
+## 📚 Cơ sở lý thuyết & Công thức nhiệt động lực học VAV
+
+**Căn cứ mã nguồn:** Lấy từ mô phỏng vật lý của ban tổ chức tại `smart_buildings/smart_control/simulator/vav.py` 
+
+### 1. Cấu tạo & Mô hình hoạt động ("Nguyên lý máy sấy tóc")
+Mỗi phòng (Zone) được điều hòa bằng một hộp **VAV (Variable Air Volume)** gồm 2 thành phần nối tiếp:
+1. **Van gió (`damper`):** Nhận luồng khí lạnh từ máy tổng ($T_{supply\_air} \approx 13^\circ\text{C} - 15^\circ\text{C}$). Độ mở van gió quyết định lưu lượng khí $\dot{m}_{air}$ thổi vào phòng (sàn tối thiểu 10% theo quy chuẩn thông gió).
+2. **Cuộn sưởi nước nóng (`reheat coil`):** Nằm ngay phía sau van gió, dùng nước nóng từ lò sưởi để hơ nóng luồng khí trước khi xả vào phòng. Độ mở van sưởi (`reheat_valve`) quyết định lượng nhiệt bổ sung $\dot{Q}_{reheat}$.
 
 ---
 
-###  Ngày 20/11/2026
+### 2. Phương trình cân bằng nhiệt lượng nạp vào phòng (`vav.py`, dòng 443–452)
+
+Tổng nhiệt lượng ròng $\dot{Q}_{net}$ nạp vào phòng trong mỗi bước thời gian được tính bằng:
+
+$$\dot{Q}_{net} = \underbrace{\dot{m}_{air} \cdot C_p \cdot (T_{supply\_air} - T_{zone})}_{\text{Thành phần khí lạnh máy tổng}} + \underbrace{\dot{Q}_{reheat}}_{\text{Thành phần sưởi nước nóng}}$$
+
+Trong đó:
+- $\dot{m}_{air}$: Lưu lượng khối không khí ($kg/s$), tỉ lệ thuận với độ mở van gió `damper` và căn bậc hai áp suất tĩnh.
+- $C_p$: Nhiệt dung riêng của không khí ($1005\ J/kg\cdot K$).
+- $(T_{supply\_air} - T_{zone})$: Do máy tổng chỉ làm lạnh nên luôn có $T_{supply\_air} < T_{zone}$. Vì vậy, số hạng này **LUÔN MANG DẤU ÂM (tức là luôn có tác dụng làm lạnh phòng)**.
+- $\dot{Q}_{reheat}$: Nhiệt lượng do cuộn nước nóng truyền vào luồng khí ($W$), luôn $\ge 0$.
+
+---
+
+### 3. Nguyên tắc điều khiển phối hợp 2 van (tự rút ra)
+
+1. **Khi phòng BỊ LẠNH (Cần sưởi):**
+   - Van gió `damper` giảm về 10% để ngăn dòng khí lạnh tràn vào.
+   - Chỉ mở van sưởi `reheat_valve` để nung ấm lượng khí nhỏ đó lên dải nhiệt dễ chịu (giới hạn tối đa 35°C theo quy chuẩn thiết kế).
+2. **Khi phòng BỊ NÓNG (Cần làm mát):**
+   - Van sưởi `reheat_valve` đóng.
+   - Van gió `damper` mở to tỉ lệ thuận với zone_error để đón nhiều khí lạnh từ máy tổng.
+3. **Khi phòng VỪA VẶN (Vùng Deadband):**
+   - Cả 2 van đều giữ ở mức tối thiểu (`damper` = 10%, `reheat` = 0%) để tối ưu hóa năng lượng.
+
+---
+
+## 📝 Nhật ký các phiên làm việc chi tiết
+
+### Ngày 20/11/2026
 - **Phiên 1**
 - **Thời gian:** 23:45 (19/11/2026) – 01:34 (20/11/2026) (Tổng phiên 1: 1 tiếng 50p)
 - **Công việc đã làm:**
@@ -16,6 +55,7 @@
   -> Cơ chế còn đơn giản: Van gió damper mở theo tỉ lệ sai số nhiệt độ (và lệch 2 độ thì max công suất), van nhiệt (reheat) chạy theo dạng bật/tắt (Chỉ cần lạnh một chút là bật 100%, hết là đóng)
   - Xác định hướng cải tiến: Làm mịn van sưởi, và bổ sung tích phân (I) kèm chống kẹt van (anti-windup) -> không dùng công thức đơn giản như cũ
 
+---
 
 - **Phiên 2**
 - **Thời gian:** 01:40 (20/11/2026) – 02:31 (20/11/2026) (Tổng phiên 2: 50p)
@@ -27,7 +67,9 @@
   - `member_a`: -1362.92
   - `pid`: -1362.92
   - Kết luận: Hai kết quả bằng nhau -> việc tách module riêng hoàn thành, đường truyền dữ liệu thông suốt, và có thể bắt đầu thay đổi công thức van để diều chỉnh điểm.
+
 ---
+
 - **Phiên 3**
 - **Thời gian:** 12:21 (20/11/2026) – 15:43 (20/11/2026) (Tổng phiên 3: 3h20p)
 - **Công việc đã làm:**
@@ -42,6 +84,7 @@
 - **Rút ra:**
   - Với thời tiết lạnh, sưởi cần dứt khoát như thuật toán pid của btc (tức là đóng mở 100% công suất)
   - Hướng khắc phục: rút ngắn ngưỡng mở sưởi max công suất từ 2 -> 0.4 - 0.5 hoặc có thể đổi sang điều chỉnh van gió mát(damper)
+
 ---
 
 - **Phiên 4**
@@ -67,45 +110,35 @@
   - *Tại sao thua ở Fairbanks?* Xứ băng giá mất nhiệt quá nhanh, van sưởi mở từ tốn làm phòng bị rét kéo dài.
   - *Kết luận:* Không thể dùng một công thức cố định cho mọi thời tiết. Cần cơ chế điều khiển thích ứng (Adaptive) theo nhiệt độ ngoài trời.
 
-- **Kế hoạch cải thiện từng phần tiếp theo (Dựa trên Base này):**
-  - **Mục tiêu 1:** Phù hợp kịch bản Fairbanks bằng cách điều khiển thích ứng: Khi nhiệt độ ngoài trời âm sâu -> bật sưởi 100%; khi trời bình thường -> giữ nguyên logic làm mượt.
-  - **Mục tiêu 2:** Tối ưu tiếp van gió làm mát (`damper`) để nâng điểm ở các xứ nóng (Phoenix, Singapore).
+---
+
+### Ngày 22/11/2026
+- **Phiên 5**
+- **Thời gian:** 23:30 – 01:50 (23/11/2026) (Tổng phiên 5: 2h20p)
+- **Công việc đã làm:**
+  - Phân tích Master Plan và quyết định chốt chọn `pid_water` (`PIDWaterResetPolicy`) làm Base chung chính thức của nhóm (vì `pid_water` có điểm tổng thể 0.054, tốt hơn nhiều so với `pid` cũ 0.067).
+  - Cập nhật file `team/policy/member_a_policy.py`: chuyển từ kế thừa `PIDPolicy` sang kế thừa `PIDWaterResetPolicy`.
+  - Chạy mô phỏng kiểm tra kết nối (plumbing test) giữa `member_a` và `pid_water` trên kịch bản `building_train_1/fairbanks_1` đủ 8640 bước:
+    `python -m team.evaluate_a --policies pid_water member_a --buildings building_train_1 --weathers fairbanks_1 --steps 8640`
+- **Minh chứng & Kết quả thực tế:**
+  - `pid_water`: -2607.41
+  - `member_a`: -2607.41
+  - Kết luận: Hai kết quả bằng nhau tuyệt đối -> Việc chuyển Base chung sang `pid_water` oke.
 
 ---
 
-##  Cơ sở lý thuyết & Công thức nhiệt động lực học VAV
-
- **Căn cứ mã nguồn:** Lấy từ mô phỏng vật lý của ban tổ chức tại `smart_buildings/smart_control/simulator/vav.py` 
-
-### 1. Cấu tạo & Mô hình hoạt động ("Nguyên lý máy sấy tóc")
-Mỗi phòng (Zone) được điều hòa bằng một hộp **VAV (Variable Air Volume)** gồm 2 thành phần nối tiếp:
-1. **Van gió (`damper`):** Nhận luồng khí lạnh từ máy tổng ($T_{supply\_air} \approx 13^\circ\text{C} - 15^\circ\text{C}$). Độ mở van gió quyết định lưu lượng khí $\dot{m}_{air}$ thổi vào phòng (sàn tối thiểu 10% theo quy chuẩn thông gió).
-2. **Cuộn sưởi nước nóng (`reheat coil`):** Nằm ngay phía sau van gió, dùng nước nóng từ lò sưởi để hơ nóng luồng khí trước khi xả vào phòng. Độ mở van sưởi (`reheat_valve`) quyết định lượng nhiệt bổ sung $\dot{Q}_{reheat}$.
-
----
-
-### 2. Phương trình cân bằng nhiệt lượng nạp vào phòng (`vav.py`, dòng 443–452)
-
-Tổng nhiệt lượng ròng $\dot{Q}_{net}$ nạp vào phòng trong mỗi bước thời gian được tính bằng:
-
-$$\dot{Q}_{net} = \underbrace{\dot{m}_{air} \cdot C_p \cdot (T_{supply\_air} - T_{zone})}_{\text{Thành phần khí lạnh máy tổng}} + \underbrace{\dot{Q}_{reheat}}_{\text{Thành phần sưởi nước nóng}}$$
-
-Trong đó:
-- $\dot{m}_{air}$: Lưu lượng khối không khí ($kg/s$), tỉ lệ thuận với độ mở van gió `damper` và căn bậc hai áp suất tĩnh.
-- $C_p$: Nhiệt dung riêng của không khí ($1005\ J/kg\cdot K$).
-- $(T_{supply\_air} - T_{zone})$: Do máy tổng chỉ làm lạnh nên luôn có $T_{supply\_air} < T_{zone}$. Vì vậy, số hạng này **LUÔN MANG DẤU ÂM (tức là luôn có tác dụng làm lạnh phòng)**.
-- $\dot{Q}_{reheat}$: Nhiệt lượng do cuộn nước nóng truyền vào luồng khí ($W$), luôn $\ge 0$.
-
----
-
-
-### 3. Nguyên tắc điều khiển phối hợp 2 van (tự rút ra)
-
-1. **Khi phòng BỊ LẠNH (Cần sưởi):**
-   - Van gió `damper` giảm về 10% để ngăn dòng khí lạnh tràn vào.
-   - Chỉ mở van sưởi `reheat_valve` để nung ấm lượng khí nhỏ đó lên dải nhiệt dễ chịu (giới hạn tối đa 35°C theo quy chuẩn thiết kế).
-2. **Khi phòng BỊ NÓNG (Cần làm mát):**
-   - Van sưởi `reheat_valve` đóng.
-   - Van gió `damper` mở to tỉ lệ thuận với zone_error để đón nhiều khí lạnh từ máy tổng.
-3. **Khi phòng VỪA VẶN (Vùng Deadband):**
-   - Cả 2 van đều giữ ở mức tối thiểu (`damper` = 10%, `reheat` = 0%) để tối ưu hóa năng lượng.
+### Ngày 23/11/2026
+- **Phiên 6**
+- **Thời gian:** 05:15 – 06:25 (23/11/2026) (Tổng phiên 6: 1h10p)
+- **Công việc đã làm:**
+  - Xác định và sửa 2 điểm yếu cốt lõi trong `team/policy/zone_controller.py`:
+    1. Đọc dải nhiệt độ chuẩn trực tiếp từ 2 cảm biến setpoint `{vav_id}_zone_air_heating_temperature_setpoint_sensor` và `cooling_temperature_setpoint_sensor` trong `obs` thay vì tự tính giờ trong ngày (giúp khớp 100% với hàm chấm điểm của BTC và không bị lệch ngày nghỉ lễ).
+    2. Triển khai nguyên lý điều khiển phối hợp 2 van : Khi phòng bị lạnh (cần sưởi), mở van sưởi theo tỷ lệ nhưng ép van gió ở mức tối thiểu 10% (`-1.0`). Điều này ngăn không cho gió lạnh từ máy tổng thổi làm nguội cuộn sưởi như các phiên trước.
+  - Chạy mô phỏng kiểm chứng lại trên kịch bản rét đậm `building_train_1/fairbanks_1` đủ 8640 bước để so sánh trực tiếp với `pid_water`.
+- **Minh chứng & Kết quả thực tế:**
+  - `pid_water` (base gốc): -2607.41
+  - `member_a` (sau khi sửa cảm biến + phối hợp 2 van): **-1270.55**
+  - Kết quả: **Cải thiện ngoạn mục +1336.86 điểm** (giảm hơn 51% điểm phạt so với `pid_water`, và vượt qua cả bản `pid` cũ -1362.92).
+- **Bản chất rút ra:**
+  - Việc khép van gió khi sưởi đã phát huy tác dụng cực mạnh: luồng gió nhỏ đi qua cuộn nước nóng được hơ ấm tối đa trước khi thổi vào phòng, phòng ấm lên nhanh mà không bị gió lạnh đè bẹp.
+  - Đọc trực tiếp cảm biến setpoint giúp các van đóng mở chuẩn xác theo thang đo của đề thi.
