@@ -20,7 +20,9 @@ class ZoneController:
         self,
         building_meta_data: Mapping[str, Any],
         zone_damper_full_k: float = 2.0, 
-        zone_reheat_full_k: float = 2.0,
+        zone_reheat_full_k: float = 1.0,
+        max_heating_damper: float = 0.35,
+        heating_damper_start_k: float = 1.0
     ) -> None:
         """Khởi tạo một lần cho mỗi tòa nhà.
         
@@ -31,6 +33,8 @@ class ZoneController:
         self.metadata = building_meta_data
         self.zone_damper_full_k = zone_damper_full_k
         self.zone_reheat_full_k = zone_reheat_full_k
+        self.max_heating_damper = max_heating_damper
+        self.heating_damper_start_k = heating_damper_start_k
 
         # 1. Cửa sổ nhiệt độ tiện nghi và tiết kiệm
         self.comfort_temp_window = building_meta_data["comfort_temp_window"]
@@ -124,8 +128,8 @@ class ZoneController:
             temp_k = self._denormalize_temp(obs[obs_idx])
 
             # Láy setpoint nếu cảm biến đo được, ko thì lấy default
-            low = float(obs[heat_sp_idx,]) if heat_sp_idx is not None else low_default
-            high = float(obs[cool_sp_idx,]) if cool_sp_idx is not None else high_default
+            low = float(obs[heat_sp_idx]) if heat_sp_idx is not None else low_default
+            high = float(obs[cool_sp_idx]) if cool_sp_idx is not None else high_default
             if not (np.isfinite(low) and np.isfinite(high) and low < high):
                 low, high = low_default, high_default
 
@@ -139,8 +143,14 @@ class ZoneController:
                 if reheat_idx is not None:
                     heat_ratio = min (1.0, error_heat / self.zone_reheat_full_k)
                     continuous[reheat_idx] = 2.0 * heat_ratio - 1.0
-                if damper_idx is not None:
-                    continuous[damper_idx] = -1.0
+                if error_heat <= self.heating_damper_start_k:
+                    heat_damper_ratio = 0.0
+                    continuous[damper_idx] = 2.0 * heat_damper_ratio - 1.0
+                elif error_heat > self.heating_damper_start_k:
+                    extra_cold = max(0.0, error_heat - self.heating_damper_start_k)
+                    heat_damper_ratio = min(self.max_heating_damper, (extra_cold/self.zone_damper_full_k)*self.max_heating_damper)
+                    continuous[damper_idx] = 2.0 * heat_damper_ratio - 1.0
+
             # Nếu đang nóng
             elif error_cool > 0:
                 if reheat_idx is not None:
