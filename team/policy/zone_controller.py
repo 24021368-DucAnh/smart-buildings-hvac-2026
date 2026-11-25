@@ -63,6 +63,12 @@ class ZoneController:
         self.hod_cos_idx = field_names.index("hod_cos_000")
         self.dow_sin_idx = field_names.index("dow_sin_000")
         self.dow_cos_idx = field_names.index("dow_cos_000")
+        # comfort_now_idx = 1.0 nếu đang trong giờ làm việc
+        # comfort_now_idx = 0.0 nếu ngoài giờ
+
+        self.comfort_now_idx = field_names.index("comfort_mode_now") if "comfort_mode_now" in field_names else None
+        # comfort_mode_soon = 1.0 nếu 60p nữa bắt đầu ca
+        self.comfort_soon_idx = field_names.index("comfort_mode_soon") if "comfort_mode_soon" in field_names else None
 
         # 4. Ánh xạ từng phòng: (tên_vav, chỉ_số_obs, chỉ_số_damper, chỉ_số_reheat, heat_sp_idx, cool_sp_idx)
         self.zones: list[tuple[str, int, int | None, int | None, int | None, int | None]] = []
@@ -134,14 +140,23 @@ class ZoneController:
         """
         continuous = action["continuous_action"]
         low_default, high_default = self._get_target_band(obs)
-
+        is_preconditioning = (
+            self.comfort_now_idx is not None 
+            and self.comfort_soon_idx is not None 
+            # Chuẩn bị vào ca
+            and obs[self.comfort_now_idx] < 0.5 
+            # Trước ca làm viêc ít nhất 30p
+            and obs[self.comfort_soon_idx] >= 0.5
+            )
         for vav_id, obs_idx, damper_idx, reheat_idx, heat_sp_idx, cool_sp_idx in self.zones:
             # Giải chuẩn hóa nhiệt độ
             temp_k = self._denormalize_temp(obs[obs_idx])
-
+            
             # Lấy setpoint nếu cảm biến đo được, không thì lấy default
             low = float(obs[heat_sp_idx]) if heat_sp_idx is not None else low_default
             high = float(obs[cool_sp_idx]) if cool_sp_idx is not None else high_default
+            if is_preconditioning == True:
+                low, high = self.comfort_temp_window
             if not (np.isfinite(low) and np.isfinite(high) and low < high):
                 low, high = low_default, high_default
 

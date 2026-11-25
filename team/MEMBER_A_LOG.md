@@ -218,3 +218,44 @@ Trong đó:
 - **Bản chất rút ra:**
   - Khâu tích phân (PI) giúp kéo thêm nhiều phòng thoát khỏi sai số tĩnh (số phòng đạt >= 20.5°C tăng từ 6 lên 11 phòng), đồng thời giảm đồng loạt cả 3 thành phần: tiện nghi (-19.2% phạt), năng lượng (-4%), và carbon (-1%).
   - Hướng tiếp theo (Bước 3): Sưởi đón đầu trước giờ làm việc (Pre-heating) và chạy đo điểm đối chứng trên đủ 5 khí hậu của `building_train_1` để kiểm tra tính tổng quát hóa sang vùng nóng.
+
+---
+
+### Ngày 26/11/2026
+- **Phiên 9**
+- **Thời gian:** 00:34 – 01:03 (26/11/2026) (Tổng phiên 9: 29p)
+- **Công việc đã làm:**
+  - Phân tích dữ liệu theo giờ trong ngày của Phiên 8 (`fairbanks_1`), thấy khung giờ 6h sáng có điểm phạt tiện nghi cao nhất trong ngày (`-88.88`, gấp hơn 2 lần buổi chiều `-38`) dù số người thấp nhất (`7.55`), do ban đêm phòng giữ ở 16°C rồi 6h sáng mới nhảy mục tiêu lên 21°C.
+  - Cải tiến Bước 3 trong `team/policy/zone_controller.py`: Đón đầu 60 phút trước giờ vào ca (Pre-conditioning) dựa trên 2 cờ có sẵn trong `obs` (`comfort_mode_now` và `comfort_mode_soon`, đã tự động tính sẵn cuối tuần và ngày lễ):
+    - Khi `comfort_mode_now < 0.5` và `comfort_mode_soon >= 0.5`, thay dải mục tiêu `[low, high]` của phòng bằng `self.comfort_temp_window` sớm hơn 60 phút.
+  - Chạy kiểm chứng riêng `member_a` trên `building_train_1/fairbanks_1` đủ 8640 bước.
+- **Minh chứng & Kết quả thực tế:**
+  - `member_a` (Phiên 8 - chưa đón đầu): -852.35
+  - `member_a` (Phiên 9 - có đón đầu 60 phút): **-848.13** (tăng +4.22 điểm; riêng phạt tiện nghi lúc 6h sáng giảm từ -88.88 xuống -81.21; tổng regret cả tháng giảm từ -613.35 xuống -603.94).
+- **Bản chất rút ra:**
+  - Cơ chế đón đầu ở van phòng hoạt động đúng nhưng chỉ tăng nhẹ (+4.22 điểm) do đụng ranh giới máy tổng AHU: lúc 5h sáng, base `pid_water` vẫn so với ngưỡng đêm 289 K (15.85°C), nên khi van phòng kéo nhiệt độ nhích lên 16.34°C thì AHU tự tắt quạt và bơm nước nóng (tỉ lệ bật AHU giờ 5 giảm từ 38.9% xuống 33.1%).
+  - Việc bật AHU đón đầu thuộc phạm vi `AHU/HWS discrete` của Thành viên B; van phòng của A hiện đã sẵn sàng phối hợp khi ghép nối ở mốc G2.
+
+---
+
+- **Phiên 10**
+- **Thời gian:** 04:00 – 06:23 (26/11/2026) (Tổng phiên 10: 2h23p)
+- **Công việc đã làm:**
+  - Chạy kiểm chứng đối chứng `member_a` (bản hoàn thiện Chặng 1: cảm biến setpoint + van gió 2 nấc + PI anti-windup + đón đầu 60 phút) với base `pid_water` trên 4 khí hậu còn lại của `building_train_1` đủ 8640 bước mỗi kịch bản:
+    `python -m team.evaluate_a --policies pid_water member_a --buildings building_train_1 --weathers atlanta_2 denver_7 phoenix_5 singapore_8 --steps 8640`
+  - Tổng hợp kết quả và tách thành phần điểm (tiện nghi, năng lượng, carbon) từ `summary.json` cho toàn bộ 5 khí hậu của `building_train_1`.
+- **Bảng tổng hợp đối chứng 5 khí hậu (`building_train_1`, 8640 bước):**
+
+| Kịch bản | Kiểu khí hậu | `pid_water` | `member_a` (Chặng 1) | Chênh lệch | Giảm phạt (%) | Thành phần cải thiện chính (`summary.json`) |
+| :--- | :--- | :---: | :---: | :---: | :---: | :--- |
+| `atlanta_2` | Ôn hòa ẩm | -212.35 | **-190.18** | +22.17 | -10.4% | Giảm cả 3: regret -297.4 -> -272.4, energy 93.4 -> 79.2, carbon 76.3 -> 54.5 |
+| `denver_7` | Khô mát vùng cao | -267.40 | **-267.09** | +0.31 | -0.1% | Regret tương đương (-434.4 vs -435.8), giảm nhẹ energy & carbon |
+| `phoenix_5` | Nóng khô sa mạc | -1092.93 | **-650.24** | **+442.69** | **-40.5%** | Giảm mạnh cả 3: regret -1010.7 -> -570.6 (-43.5%), energy 1807.9 -> 1209.2 (-33.1%), carbon 624.5 -> 330.2 (-47.1%) |
+| `singapore_8` | Nóng ẩm xích đạo | -254.55 | **-223.26** | +31.29 | -12.3% | Giảm cả 3: regret -268.3 -> -219.8 (-18.1%), energy 371.1 -> 365.9, carbon 96.8 -> 91.1 |
+| `fairbanks_1` | Băng giá cực đoan | -2607.41 | **-848.13** | **+1759.28** | **-67.5%** | Giảm cả 3: regret -1345.0 -> -603.9 (-55.1%), energy 3550.3 -> 846.1 (-76.2%), carbon 5451.7 -> 1582.7 (-71.0%) |
+| **Trung bình 5 khí hậu (LB scale)** | — | **0.10265** | **0.05044** | — | **-50.9%** | Tổng loss giảm từ 4434.64 xuống 2178.90 |
+
+- **Bản chất rút ra:**
+  - Bộ điều khiển Chặng 1 của A thắng `pid_water` trên **5/5 khí hậu**, không bị đánh đổi giữa xứ lạnh và xứ nóng.
+  - Ở xứ nóng (`phoenix_5`, `singapore_8`), khâu tích phân PI giúp kéo nhiệt độ phòng nằm gọn trong dải làm mát (giảm 43.5% phạt tiện nghi ở Phoenix và 18.1% ở Singapore), đồng thời phối hợp 2 van tránh thổi thừa gió lạnh vào sáng sớm sa mạc nên giảm thêm 33% năng lượng và 47% carbon ở Phoenix.
+  - Hoàn thành **Chặng 1 (Khung vật lý chuẩn)**; sẵn sàng bước sang **Chặng 2 (Thu thập dữ liệu từ simulator và huấn luyện mô hình ML phần dư)**.
