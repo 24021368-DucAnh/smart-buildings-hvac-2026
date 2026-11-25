@@ -186,3 +186,35 @@ Trong đó:
 - **Bản chất rút ra:**
   - Mở van gió lên tối đa 35% ở Nấc 2 đã tải thêm nhiệt từ cuộn sưởi vào các phòng góc như `zone_0`, kéo độ lệch trung bình của phòng tệ nhất từ 7.74 K xuống 3.02 K (nằm gọn dưới ngưỡng 5 K nên không còn bị phạt bình phương), trong khi chi phí năng lượng chỉ tăng rất ít (từ 860 lên 878.8).
   - Hướng tiếp theo (Bước 2): Thêm khâu tích phân (PI) + chống tràn (anti-windup) cho từng phòng để kéo nhiệt độ các phòng còn lệch 1–3 K tiến sát hẳn về ngưỡng mục tiêu 294 K (20.85°C).
+
+---
+
+### Ngày 25/11/2026
+- **Phiên 8**
+- **Thời gian:** 23:13 (25/11/2026) – 00:30 (26/11/2026) (Tổng phiên 8: 1h17p)
+- **Công việc đã làm:**
+  - Cải tiến Bước 2 trong `team/policy/zone_controller.py`: Thêm khâu tích phân (PI) kèm chống tràn (anti-windup) riêng cho từng phòng (`self.zone_integrals`):
+    - Tham số khởi điểm: `ki = 0.05`, `integral_limit = 2.0`, `integral_decay = 0.85`.
+    - Cập nhật tích phân theo 3 trạng thái: xả dần (`*= 0.85`) khi phòng đã vào dải tiện nghi (`signed_error == 0`), reset khi đổi chiều nóng/lạnh (`integral * signed_error < 0`), và cộng dồn `ki * signed_error` kèm kẹp biên `[-2.0, +2.0]` khi phòng vẫn lệch.
+    - Cộng phần tích phân vào sai số hiện tại (`effort_heat`, `effort_cool`) để điều khiển van sưởi và van gió 2 nấc, nhưng vẫn giữ điều kiện kích hoạt nhánh theo sai số thực (`error_heat > 0` / `error_cool > 0`) để không mở van khi phòng đã vào dải tiện nghi.
+  - Chạy kiểm chứng riêng `member_a` trên `building_train_1/fairbanks_1` đủ 8640 bước (`python -m team.evaluate_a --policies member_a --buildings building_train_1 --weathers fairbanks_1 --steps 8640`).
+- **Minh chứng & Kết quả thực tế:**
+  - `pid_water` (base gốc): -2607.41
+  - `member_a` (Phiên 7 - 2 nấc van gió, thuần P): -950.24
+  - `member_a` (Phiên 8 - 2 nấc van gió + PI anti-windup): **-852.35**
+  - Kết quả: Điểm tổng tăng thêm **+97.89 điểm** (giảm 10.3% tổng điểm phạt so với Phiên 7, và giảm 67.3% so với base `pid_water`).
+- **Phân tích thành phần điểm và nhiệt độ phòng (`summary.json` & `timeseries.csv`):**
+
+| Chỉ số | `member_a` (Phiên 7) | `member_a` (Phiên 8) | Thay đổi |
+| :--- | :---: | :---: | :--- |
+| **Tổng điểm (total reward)** | -950.24 | **-852.35** | Tăng +97.89 điểm (-10.3% phạt) |
+| Tiện nghi (productivity regret) | -759.09 | **-613.35** | Giảm 19.2% phạt tiện nghi |
+| Chi phí năng lượng | 878.84 | **843.69** | Giảm ~4% (thấp hơn cả Phiên 6) |
+| Phát thải carbon | 1595.09 | **1577.99** | Giảm nhẹ ~1% |
+| Độ lệch nhiệt độ TB toàn tòa | 1.43 K | **1.16 K** | Giảm 0.27 K |
+| Số phòng đạt nhiệt độ TB >= 20.5°C | 6 phòng | **11 phòng** | Tăng thêm 5 phòng |
+| Nhiệt độ TB `zone_0` (giờ có người) | 17.99°C | 17.24°C | Giảm nhẹ 0.75°C (vẫn < 5 K lệch) |
+
+- **Bản chất rút ra:**
+  - Khâu tích phân (PI) giúp kéo thêm nhiều phòng thoát khỏi sai số tĩnh (số phòng đạt >= 20.5°C tăng từ 6 lên 11 phòng), đồng thời giảm đồng loạt cả 3 thành phần: tiện nghi (-19.2% phạt), năng lượng (-4%), và carbon (-1%).
+  - Hướng tiếp theo (Bước 3): Sưởi đón đầu trước giờ làm việc (Pre-heating) và chạy đo điểm đối chứng trên đủ 5 khí hậu của `building_train_1` để kiểm tra tính tổng quát hóa sang vùng nóng.

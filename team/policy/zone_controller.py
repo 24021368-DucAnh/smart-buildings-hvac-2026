@@ -22,7 +22,14 @@ class ZoneController:
         zone_damper_full_k: float = 2.0, 
         zone_reheat_full_k: float = 1.0,
         max_heating_damper: float = 0.35,
-        heating_damper_start_k: float = 1.0
+        heating_damper_start_k: float = 1.0,
+        # Tốc độ tích lũy
+        ki: float = 0.05,
+        # Tích phân limit
+        integral_limit: float = 2.0,
+        # Tốc độ tích phân giảm
+        integral_decay: float = 0.85,
+
     ) -> None:
         """Khởi tạo một lần cho mỗi tòa nhà.
         
@@ -35,6 +42,9 @@ class ZoneController:
         self.zone_reheat_full_k = zone_reheat_full_k
         self.max_heating_damper = max_heating_damper
         self.heating_damper_start_k = heating_damper_start_k
+        self.integral_decay = integral_decay
+        self.integral_limit = integral_limit
+        self.ki = ki
 
         # 1. Cửa sổ nhiệt độ tiện nghi và tiết kiệm
         self.comfort_temp_window = building_meta_data["comfort_temp_window"]
@@ -54,8 +64,9 @@ class ZoneController:
         self.dow_sin_idx = field_names.index("dow_sin_000")
         self.dow_cos_idx = field_names.index("dow_cos_000")
 
-        # 4. Ánh xạ từng phòng: (tên_vav, chỉ_số_obs, chỉ_số_damper, chỉ_số_reheat)
-        self.zones: list[tuple[str, int, int | None, int | None]] = []
+        # 4. Ánh xạ từng phòng: (tên_vav, chỉ_số_obs, chỉ_số_damper, chỉ_số_reheat, heat_sp_idx, cool_sp_idx)
+        self.zones: list[tuple[str, int, int | None, int | None, int | None, int | None]] = []
+        self.zone_integrals: dict[str, float] = {}
         zone_action_indices = building_meta_data["zone_action_indices"]
         zone_temp_field_index = {
             name: i
@@ -80,6 +91,7 @@ class ZoneController:
                 cool_sp_idx = field_names.index(cool_sp_field) if cool_sp_field in field_names else None
                 
                 self.zones.append((vav_id, obs_idx, damper_idx, reheat_idx, heat_sp_idx, cool_sp_idx))
+                self.zone_integrals[vav_id] = 0.0
 
     def _denormalize_temp(self, normalized_val: float) -> float:
         """Đưa giá trị nhiệt độ quan sát về độ Kelvin thực tế."""
@@ -123,11 +135,11 @@ class ZoneController:
         continuous = action["continuous_action"]
         low_default, high_default = self._get_target_band(obs)
 
-        for _, obs_idx, damper_idx, reheat_idx, heat_sp_idx, cool_sp_idx in self.zones:
+        for vav_id, obs_idx, damper_idx, reheat_idx, heat_sp_idx, cool_sp_idx in self.zones:
             # Giải chuẩn hóa nhiệt độ
             temp_k = self._denormalize_temp(obs[obs_idx])
 
-            # Láy setpoint nếu cảm biến đo được, ko thì lấy default
+            # Lấy setpoint nếu cảm biến đo được, không thì lấy default
             low = float(obs[heat_sp_idx]) if heat_sp_idx is not None else low_default
             high = float(obs[cool_sp_idx]) if cool_sp_idx is not None else high_default
             if not (np.isfinite(low) and np.isfinite(high) and low < high):
@@ -137,18 +149,42 @@ class ZoneController:
             error_heat = max(0.0, low - temp_k)
             error_cool = max(0.0, temp_k - high)
 
-            #  Điều khiển 2 van
+            # Dương khi đang lạnh, âm khi đang nóng, bằng 0 khi trong dải
+            signed_error = error_heat - error_cool
+            # Lấy tích phân hiện tại
+            integral = self.zone_integrals[vav_id]
+            # Nếu trong dải tiện nghi: xả dần tích phân
+            if signed_error == 0.0:
+                integral *= self.integral_decay
+            # Nếu integral ngược dấu với signed_error (đổi pha, reset rồi tích lũy lại)
+            elif integral * signed_error < 0.0:
+                integral = self.ki * signed_error
+            # Ngược lại cùng dấu với signed_error (tiếp tục tích lũy)
+            else:
+                integral += self.ki * signed_error
+            # Chặn biên anti-windup
+            integral = float(np.clip(integral, -self.integral_limit, self.integral_limit))
+            self.zone_integrals[vav_id] = integral
+
+            # Tính sai số hiệu dụng sau khi cộng tích phân
+            effort_heat = error_heat + max(0.0, integral)
+            effort_cool = error_cool + max(0.0, -integral)
+
+            # Điều khiển 2 van
             # Nếu đang bị lạnh
             if error_heat > 0:
                 if reheat_idx is not None:
-                    heat_ratio = min (1.0, error_heat / self.zone_reheat_full_k)
+                    heat_ratio = min(1.0, effort_heat / self.zone_reheat_full_k)
                     continuous[reheat_idx] = 2.0 * heat_ratio - 1.0
-                if error_heat <= self.heating_damper_start_k:
-                    heat_damper_ratio = 0.0
-                    continuous[damper_idx] = 2.0 * heat_damper_ratio - 1.0
-                elif error_heat > self.heating_damper_start_k:
-                    extra_cold = max(0.0, error_heat - self.heating_damper_start_k)
-                    heat_damper_ratio = min(self.max_heating_damper, (extra_cold/self.zone_damper_full_k)*self.max_heating_damper)
+                if damper_idx is not None:
+                    if effort_heat <= self.heating_damper_start_k:
+                        heat_damper_ratio = 0.0
+                    else:
+                        extra_cold = max(0.0, effort_heat - self.heating_damper_start_k)
+                        heat_damper_ratio = min(
+                            self.max_heating_damper,
+                            (extra_cold / self.zone_damper_full_k) * self.max_heating_damper,
+                        )
                     continuous[damper_idx] = 2.0 * heat_damper_ratio - 1.0
 
             # Nếu đang nóng
@@ -156,7 +192,7 @@ class ZoneController:
                 if reheat_idx is not None:
                     continuous[reheat_idx] = -1.0
                 if damper_idx is not None:
-                    cool_ratio = min(1.0, error_cool / self.zone_damper_full_k)
+                    cool_ratio = min(1.0, effort_cool / self.zone_damper_full_k)
                     continuous[damper_idx] = 2.0 * cool_ratio - 1.0
             else:
                 if reheat_idx is not None:
