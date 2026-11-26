@@ -1,0 +1,2 @@
+id,source_sha,model_sha256,train_samples,artifact_uri,status
+B04-20261125-01,3dd6b3a850354ea1eddfe58b9c8d2926f48bff31,0ab9c94df325a11755c90e90b95c9e9a3248e862eca0188e7b53e68e9687ad4d,1537920,./artifacts/B04-20261125-01,VERIFIED_OFFLINE_BASELINE
