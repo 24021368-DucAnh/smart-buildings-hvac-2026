@@ -25,7 +25,7 @@ class MemberAPolicy(PIDWaterResetPolicy):
         super().__init__(building_meta_data, action_spec, **kwargs)
         # Khởi tạo module điều khiển phòng độc lập của A
         self.zone_controller = ZoneController(building_meta_data)
-    # ghi đè lại hàm trong pid_plus
+    # Tắt hàm điều khiển van phòng mặc định của pid_plus (vốn bị gọi lặp theo số AHU)
     def _command_zones(
         self,
         continuous: np.ndarray,
@@ -34,11 +34,10 @@ class MemberAPolicy(PIDWaterResetPolicy):
         low: float,
         high: float,
     ) -> None:
-        """Chuyển giao quyền điều khiển van phòng cho ZoneController của A."""
-        # Đóng gói thành action dict theo chuẩn hợp đồng
-        action = {
-            "continuous_action": continuous,
-            "discrete_action": np.zeros(self.n_discrete, dtype=np.int32),
-        }
-        # Gọi module của A xử lý
-        self.zone_controller.adjust(obs, action)
+        """Bỏ qua trong vòng lặp AHU để tránh gọi lặp K lần mỗi bước."""
+        pass
+
+    def get_action(self, obs: np.ndarray) -> dict[str, Any]:
+        """Lấy action máy tổng từ base rồi gọi ZoneController đúng 1 lần mỗi bước."""
+        action = super().get_action(obs)
+        return self.zone_controller.adjust(obs, action)

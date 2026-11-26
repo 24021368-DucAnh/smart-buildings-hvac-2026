@@ -114,7 +114,7 @@ Trong đó:
 
 ### Ngày 22/11/2026
 - **Phiên 5**
-- **Thời gian:** 23:30 – 01:50 (23/11/2026) (Tổng phiên 5: 2h20p)
+- **Thời gian:** 23:30 – 01:53 (23/11/2026) (Tổng phiên 5: 2h20p)
 - **Công việc đã làm:**
   - Phân tích Master Plan và quyết định chốt chọn `pid_water` (`PIDWaterResetPolicy`) làm Base chung chính thức của nhóm (vì `pid_water` có điểm tổng thể 0.054, tốt hơn nhiều so với `pid` cũ 0.067).
   - Cập nhật file `team/policy/member_a_policy.py`: chuyển từ kế thừa `PIDPolicy` sang kế thừa `PIDWaterResetPolicy`.
@@ -138,7 +138,124 @@ Trong đó:
 - **Minh chứng & Kết quả thực tế:**
   - `pid_water` (base gốc): -2607.41
   - `member_a` (sau khi sửa cảm biến + phối hợp 2 van): **-1270.55**
-  - Kết quả: **Cải thiện ngoạn mục +1336.86 điểm** (giảm hơn 51% điểm phạt so với `pid_water`, và vượt qua cả bản `pid` cũ -1362.92).
+  - Kết quả: Điểm tăng +1336.86 (giảm 51.3% điểm phạt so với `pid_water`, tốt hơn mức -1362.92 của bản `pid` cũ).
+- **Phân tích thành phần điểm (lấy từ `summary.json` của từng policy):**
+
+| Thành phần | `pid_water` | `member_a` | Ghi chú |
+| :--- | :---: | :---: | :--- |
+| Tiện nghi (productivity regret) | -1345.0 | -1339.4 | Gần như không đổi |
+| Chi phí năng lượng | 3550.3 | 860.0 | Giảm khoảng 76% |
+| Phát thải carbon | 5451.7 | 1474.7 | Giảm khoảng 73% |
+| Nhiệt độ phòng trung bình | 16.87°C | 16.68°C | Cả hai đều dưới dải tiện nghi |
+
+  - Công thức kiểm tra: tổng điểm = 0.6 × tiện nghi − 0.2 × năng lượng − 0.2 × carbon (ví dụ `member_a`: 0.6 × (-1339.4) − 0.2 × 860.0 − 0.2 × 1474.7 = -1270.6).
 - **Bản chất rút ra:**
-  - Việc khép van gió khi sưởi đã phát huy tác dụng cực mạnh: luồng gió nhỏ đi qua cuộn nước nóng được hơ ấm tối đa trước khi thổi vào phòng, phòng ấm lên nhanh mà không bị gió lạnh đè bẹp.
-  - Đọc trực tiếp cảm biến setpoint giúp các van đóng mở chuẩn xác theo thang đo của đề thi.
+  - Phần điểm tăng gần như toàn bộ đến từ năng lượng và carbon, không phải từ tiện nghi. Khép van gió khi sưởi làm giảm lượng gió lạnh phải hâm nóng, nên tốn ít điện quạt và ít gas cho lò hơn.
+  - Phòng vẫn lạnh như trước (trung bình khoảng 16.7°C). Phần tiện nghi bây giờ chiếm khoảng 804 / 1270 điểm phạt, tức là phần lớn điểm phạt còn lại ở Fairbanks nằm ở việc phòng không đủ ấm.
+  - Hướng tiếp theo cần nhắm vào phần tiện nghi: tìm lúc nào cần mở thêm van gió để đưa thêm nhiệt vào phòng khi trời rét sâu (giới hạn khí xả 35°C nên van gió quá nhỏ thì nhiệt đưa vào cũng bị giới hạn).
+
+---
+
+### Ngày 24/11/2026
+- **Phiên 7**
+- **Thời gian:** 23:15 (24/11/2026) – 03:10 (25/11/2026) (Tổng phiên 7: 3h55p)
+- **Công việc đã làm:**
+  - Sửa lỗi gọi lặp trong `team/policy/member_a_policy.py`: ghi đè `_command_zones` thành `pass` và gọi `self.zone_controller.adjust(obs, action)` đúng 1 lần mỗi bước trong `get_action(obs)` thay vì bị gọi lặp 4 lần theo số AHU
+  - Kiểm tra dữ liệu nhiệt độ từng phòng của Phiên 6 (`timeseries.csv`), phát hiện các phòng góc mất nhiệt mạnh (`zone_0`, `zone_3`, `zone_28`, `zone_31`) bị thiếu nhiệt vì khí xả VAV giới hạn tối đa ở 35°C (`308.15 K`), nên khi ép cố định `damper = 10%` thì lưu lượng gió không tải đủ nhiệt vào phòng (`zone_0` chỉ đạt trung bình 13.26°C, lệch 7.74 K > 5 K nên bị phạt bình phương).
+  - Cải tiến Bước 1 trong `team/policy/zone_controller.py` — Mở van gió theo 2 nấc khi sưởi (Staged Dual-Maximum):
+    - Hạ `zone_reheat_full_k` từ `2.0` xuống `1.0` để van nước nóng mở 100% sớm hơn khi phòng lạnh từ 1.0 K.
+    - Nấc 1 (`error_heat <= 1.0 K`): giữ van gió ở mức sàn 10% (`-1.0`), chỉ mở dần van nước nóng.
+    - Nấc 2 (`error_heat > 1.0 K`, sau khi van nước nóng đã mở 100% mà phòng vẫn lạnh): mở tăng dần van gió theo phần lạnh vượt ngưỡng `extra_cold = error_heat - 1.0`, nhưng giới hạn trần tối đa ở `max_heating_damper = 0.35` (35% gió, vùng đạt công suất truyền nhiệt cao nhất mà không để gió lạnh lấn át cuộn sưởi).
+  - Chạy kiểm chứng lại trên `building_train_1/fairbanks_1` đủ 8640 bước.
+- **Minh chứng & Kết quả thực tế:**
+  - `pid_water` (base gốc): -2607.41
+  - `member_a` (Phiên 6 - ép cứng van gió 10% khi sưởi): -1270.55
+  - `member_a` (Phiên 7 - mở van gió 2 nấc khi sưởi, trần 35%): **-950.24**
+  - Kết quả: Điểm tổng tăng thêm **+320.31 điểm** so với Phiên 6 (và tăng +1657.17 điểm so với `pid_water`).
+- **Phân tích thành phần điểm và nhiệt độ phòng (`summary.json` & `timeseries.csv`):**
+
+| Chỉ số | `pid_water` | `member_a` (Phiên 6) | `member_a` (Phiên 7) | Ghi chú |
+| :--- | :---: | :---: | :---: | :--- |
+| **Tổng điểm (total reward)** | -2607.41 | -1270.55 | **-950.24** | Giảm 63.6% điểm phạt so với base |
+| Tiện nghi (productivity regret) | -1345.0 | -1339.4 | **-759.09** | Giảm 43.3% phạt tiện nghi |
+| Chi phí năng lượng | 3550.3 | 860.0 | 878.84 | Chỉ tăng nhẹ ~2% so với Phiên 6 |
+| Phát thải carbon | 5451.7 | 1474.7 | 1595.09 | Tăng ~8% để đổi lấy nhiệt sưởi |
+| Nhiệt độ TB `zone_0` (phòng tệ nhất) | ~16.5°C | 13.26°C | **17.99°C** | Tăng +4.73°C, thoát vùng phạt > 5 K |
+| Số phòng có nhiệt độ TB < 18°C | 15 phòng | 10 phòng | **1 phòng** | Chỉ còn `zone_0` ở mức 17.99°C |
+
+- **Bản chất rút ra:**
+  - Mở van gió lên tối đa 35% ở Nấc 2 đã tải thêm nhiệt từ cuộn sưởi vào các phòng góc như `zone_0`, kéo độ lệch trung bình của phòng tệ nhất từ 7.74 K xuống 3.02 K (nằm gọn dưới ngưỡng 5 K nên không còn bị phạt bình phương), trong khi chi phí năng lượng chỉ tăng rất ít (từ 860 lên 878.8).
+  - Hướng tiếp theo (Bước 2): Thêm khâu tích phân (PI) + chống tràn (anti-windup) cho từng phòng để kéo nhiệt độ các phòng còn lệch 1–3 K tiến sát hẳn về ngưỡng mục tiêu 294 K (20.85°C).
+
+---
+
+### Ngày 25/11/2026
+- **Phiên 8**
+- **Thời gian:** 23:13 (25/11/2026) – 00:30 (26/11/2026) (Tổng phiên 8: 1h17p)
+- **Công việc đã làm:**
+  - Cải tiến Bước 2 trong `team/policy/zone_controller.py`: Thêm khâu tích phân (PI) kèm chống tràn (anti-windup) riêng cho từng phòng (`self.zone_integrals`):
+    - Tham số khởi điểm: `ki = 0.05`, `integral_limit = 2.0`, `integral_decay = 0.85`.
+    - Cập nhật tích phân theo 3 trạng thái: xả dần (`*= 0.85`) khi phòng đã vào dải tiện nghi (`signed_error == 0`), reset khi đổi chiều nóng/lạnh (`integral * signed_error < 0`), và cộng dồn `ki * signed_error` kèm kẹp biên `[-2.0, +2.0]` khi phòng vẫn lệch.
+    - Cộng phần tích phân vào sai số hiện tại (`effort_heat`, `effort_cool`) để điều khiển van sưởi và van gió 2 nấc, nhưng vẫn giữ điều kiện kích hoạt nhánh theo sai số thực (`error_heat > 0` / `error_cool > 0`) để không mở van khi phòng đã vào dải tiện nghi.
+  - Chạy kiểm chứng riêng `member_a` trên `building_train_1/fairbanks_1` đủ 8640 bước (`python -m team.evaluate_a --policies member_a --buildings building_train_1 --weathers fairbanks_1 --steps 8640`).
+- **Minh chứng & Kết quả thực tế:**
+  - `pid_water` (base gốc): -2607.41
+  - `member_a` (Phiên 7 - 2 nấc van gió, thuần P): -950.24
+  - `member_a` (Phiên 8 - 2 nấc van gió + PI anti-windup): **-852.35**
+  - Kết quả: Điểm tổng tăng thêm **+97.89 điểm** (giảm 10.3% tổng điểm phạt so với Phiên 7, và giảm 67.3% so với base `pid_water`).
+- **Phân tích thành phần điểm và nhiệt độ phòng (`summary.json` & `timeseries.csv`):**
+
+| Chỉ số | `member_a` (Phiên 7) | `member_a` (Phiên 8) | Thay đổi |
+| :--- | :---: | :---: | :--- |
+| **Tổng điểm (total reward)** | -950.24 | **-852.35** | Tăng +97.89 điểm (-10.3% phạt) |
+| Tiện nghi (productivity regret) | -759.09 | **-613.35** | Giảm 19.2% phạt tiện nghi |
+| Chi phí năng lượng | 878.84 | **843.69** | Giảm ~4% (thấp hơn cả Phiên 6) |
+| Phát thải carbon | 1595.09 | **1577.99** | Giảm nhẹ ~1% |
+| Độ lệch nhiệt độ TB toàn tòa | 1.43 K | **1.16 K** | Giảm 0.27 K |
+| Số phòng đạt nhiệt độ TB >= 20.5°C | 6 phòng | **11 phòng** | Tăng thêm 5 phòng |
+| Nhiệt độ TB `zone_0` (giờ có người) | 17.99°C | 17.24°C | Giảm nhẹ 0.75°C (vẫn < 5 K lệch) |
+
+- **Bản chất rút ra:**
+  - Khâu tích phân (PI) giúp kéo thêm nhiều phòng thoát khỏi sai số tĩnh (số phòng đạt >= 20.5°C tăng từ 6 lên 11 phòng), đồng thời giảm đồng loạt cả 3 thành phần: tiện nghi (-19.2% phạt), năng lượng (-4%), và carbon (-1%).
+  - Hướng tiếp theo (Bước 3): Sưởi đón đầu trước giờ làm việc (Pre-heating) và chạy đo điểm đối chứng trên đủ 5 khí hậu của `building_train_1` để kiểm tra tính tổng quát hóa sang vùng nóng.
+
+---
+
+### Ngày 26/11/2026
+- **Phiên 9**
+- **Thời gian:** 00:34 – 01:03 (26/11/2026) (Tổng phiên 9: 29p)
+- **Công việc đã làm:**
+  - Phân tích dữ liệu theo giờ trong ngày của Phiên 8 (`fairbanks_1`), thấy khung giờ 6h sáng có điểm phạt tiện nghi cao nhất trong ngày (`-88.88`, gấp hơn 2 lần buổi chiều `-38`) dù số người thấp nhất (`7.55`), do ban đêm phòng giữ ở 16°C rồi 6h sáng mới nhảy mục tiêu lên 21°C.
+  - Cải tiến Bước 3 trong `team/policy/zone_controller.py`: Đón đầu 60 phút trước giờ vào ca (Pre-conditioning) dựa trên 2 cờ có sẵn trong `obs` (`comfort_mode_now` và `comfort_mode_soon`, đã tự động tính sẵn cuối tuần và ngày lễ):
+    - Khi `comfort_mode_now < 0.5` và `comfort_mode_soon >= 0.5`, thay dải mục tiêu `[low, high]` của phòng bằng `self.comfort_temp_window` sớm hơn 60 phút.
+  - Chạy kiểm chứng riêng `member_a` trên `building_train_1/fairbanks_1` đủ 8640 bước.
+- **Minh chứng & Kết quả thực tế:**
+  - `member_a` (Phiên 8 - chưa đón đầu): -852.35
+  - `member_a` (Phiên 9 - có đón đầu 60 phút): **-848.13** (tăng +4.22 điểm; riêng phạt tiện nghi lúc 6h sáng giảm từ -88.88 xuống -81.21; tổng regret cả tháng giảm từ -613.35 xuống -603.94).
+- **Bản chất rút ra:**
+  - Cơ chế đón đầu ở van phòng hoạt động đúng nhưng chỉ tăng nhẹ (+4.22 điểm) do đụng ranh giới máy tổng AHU: lúc 5h sáng, base `pid_water` vẫn so với ngưỡng đêm 289 K (15.85°C), nên khi van phòng kéo nhiệt độ nhích lên 16.34°C thì AHU tự tắt quạt và bơm nước nóng (tỉ lệ bật AHU giờ 5 giảm từ 38.9% xuống 33.1%).
+  - Việc bật AHU đón đầu thuộc phạm vi `AHU/HWS discrete` của Thành viên B; van phòng của A hiện đã sẵn sàng phối hợp khi ghép nối ở mốc G2.
+
+---
+
+- **Phiên 10**
+- **Thời gian:** 04:00 – 06:23 (26/11/2026) (Tổng phiên 10: 2h23p)
+- **Công việc đã làm:**
+  - Chạy kiểm chứng đối chứng `member_a` (bản hoàn thiện Chặng 1: cảm biến setpoint + van gió 2 nấc + PI anti-windup + đón đầu 60 phút) với base `pid_water` trên 4 khí hậu còn lại của `building_train_1` đủ 8640 bước mỗi kịch bản:
+    `python -m team.evaluate_a --policies pid_water member_a --buildings building_train_1 --weathers atlanta_2 denver_7 phoenix_5 singapore_8 --steps 8640`
+  - Tổng hợp kết quả và tách thành phần điểm (tiện nghi, năng lượng, carbon) từ `summary.json` cho toàn bộ 5 khí hậu của `building_train_1`.
+- **Bảng tổng hợp đối chứng 5 khí hậu (`building_train_1`, 8640 bước):**
+
+| Kịch bản | Kiểu khí hậu | `pid_water` | `member_a` (Chặng 1) | Chênh lệch | Giảm phạt (%) | Thành phần cải thiện chính (`summary.json`) |
+| :--- | :--- | :---: | :---: | :---: | :---: | :--- |
+| `atlanta_2` | Ôn hòa ẩm | -212.35 | **-190.18** | +22.17 | -10.4% | Giảm cả 3: regret -297.4 -> -272.4, energy 93.4 -> 79.2, carbon 76.3 -> 54.5 |
+| `denver_7` | Khô mát vùng cao | -267.40 | **-267.09** | +0.31 | -0.1% | Regret tương đương (-434.4 vs -435.8), giảm nhẹ energy & carbon |
+| `phoenix_5` | Nóng khô sa mạc | -1092.93 | **-650.24** | **+442.69** | **-40.5%** | Giảm mạnh cả 3: regret -1010.7 -> -570.6 (-43.5%), energy 1807.9 -> 1209.2 (-33.1%), carbon 624.5 -> 330.2 (-47.1%) |
+| `singapore_8` | Nóng ẩm xích đạo | -254.55 | **-223.26** | +31.29 | -12.3% | Giảm cả 3: regret -268.3 -> -219.8 (-18.1%), energy 371.1 -> 365.9, carbon 96.8 -> 91.1 |
+| `fairbanks_1` | Băng giá cực đoan | -2607.41 | **-848.13** | **+1759.28** | **-67.5%** | Giảm cả 3: regret -1345.0 -> -603.9 (-55.1%), energy 3550.3 -> 846.1 (-76.2%), carbon 5451.7 -> 1582.7 (-71.0%) |
+| **Trung bình 5 khí hậu (LB scale)** | — | **0.10265** | **0.05044** | — | **-50.9%** | Tổng loss giảm từ 4434.64 xuống 2178.90 |
+
+- **Bản chất rút ra:**
+  - Bộ điều khiển Chặng 1 của A thắng `pid_water` trên **5/5 khí hậu**, không bị đánh đổi giữa xứ lạnh và xứ nóng.
+  - Ở xứ nóng (`phoenix_5`, `singapore_8`), khâu tích phân PI giúp kéo nhiệt độ phòng nằm gọn trong dải làm mát (giảm 43.5% phạt tiện nghi ở Phoenix và 18.1% ở Singapore), đồng thời phối hợp 2 van tránh thổi thừa gió lạnh vào sáng sớm sa mạc nên giảm thêm 33% năng lượng và 47% carbon ở Phoenix.
+  - Hoàn thành **Chặng 1 (Khung vật lý chuẩn)**; sẵn sàng bước sang **Chặng 2 (Thu thập dữ liệu từ simulator và huấn luyện mô hình ML phần dư)**.
