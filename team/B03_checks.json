@@ -1,0 +1,503 @@
+{
+  "task": "B03",
+  "status": "VERIFIED_INITIAL_CORPUS",
+  "verified_at_utc": "2026-11-23T04:54:24.333895+00:00",
+  "training_ready": true,
+  "source": {
+    "group_sha": "78d8b62f6d13454dc83370b1adf7be88190b5720",
+    "branch": "feature/B-benchmark-harness-20261120",
+    "upstream_main_verified_before_edits": "1fb75606d12e016463fbc63de704967c5b2bf9d5",
+    "working_tree_dirty": true,
+    "active_producer_pin_matches_live_files": true,
+    "original_reused_files_unchanged": true,
+    "original_partial_checkpoint_unchanged": true,
+    "official_source_unchanged": true,
+    "git_delivery": "No commit/push/PR/merge"
+  },
+  "dataset": "data\\generated\\trajectories\\b03-corpus-20261123-02",
+  "manifest": "configs/dataset_manifest.yaml",
+  "manifest_sha256": "e285ef37b1133549dc5f2b6aae9c9fcae938d72ef2dd1c4099138b5a5d82362d",
+  "dataset_receipt_sha256": "0615e4495b8fd69c0c1ea28c32115a614008dd4d7b15144b2fcc56539e5e195a",
+  "total_episodes": 6,
+  "total_transitions": 51840,
+  "total_zone_transition_samples": 3568320,
+  "npz_bytes": 94462942,
+  "splits": {
+    "train": [
+      "building_train_1",
+      "building_train_2",
+      "building_train_4"
+    ],
+    "validation": [
+      "building_train_5",
+      "building_train_7"
+    ],
+    "generated_dev": [
+      "building_0500"
+    ]
+  },
+  "episodes": [
+    {
+      "scenario": "building_train_1/fairbanks_1",
+      "split": "train",
+      "steps": 8640,
+      "zones": 39,
+      "observation_dim": 352,
+      "continuous_dim": 92,
+      "discrete_dim": 5,
+      "zone_transition_samples": 336960,
+      "raw_invalid_sensor_values": 0,
+      "masked_zone_targets": 0,
+      "rows_dropped": 0,
+      "continuous_channels_changed": 88,
+      "discrete_switches": 5163,
+      "total_reward_diagnostic_only": -2607.412790940667,
+      "worker_wall_s": 359.3126210999908,
+      "worker_collection_cpu_s": 350.5625,
+      "reused": true,
+      "producer_evidence": "original archive/manual audit",
+      "diagnostics": {
+        "delta_K_quantiles_0_1_50_99_100": [
+          -6.504028797149658,
+          -2.6176231932640075,
+          -0.013244524598121643,
+          3.2968401360511725,
+          8.24407958984375
+        ],
+        "zone_temperature_range_K": [
+          281.3056945800781,
+          298.73483270406723
+        ],
+        "extreme_examples": [
+          {
+            "step": 1915,
+            "zone": "VAV_6",
+            "time": "2023-01-07T21:35:00",
+            "next_time": "2023-01-07T21:40:00",
+            "before_K": 294.05398562550545,
+            "after_K": 287.54995703697205,
+            "delta_K": -6.504028797149658,
+            "valid": true
+          },
+          {
+            "step": 3094,
+            "zone": "VAV_33",
+            "time": "2023-01-11T23:50:00",
+            "next_time": "2023-01-11T23:55:00",
+            "before_K": 284.19500708580017,
+            "after_K": 292.4390870332718,
+            "delta_K": 8.24407958984375,
+            "valid": true
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "building_train_2/denver_8",
+      "split": "train",
+      "steps": 8640,
+      "zones": 85,
+      "observation_dim": 703,
+      "continuous_dim": 199,
+      "discrete_dim": 10,
+      "zone_transition_samples": 734400,
+      "raw_invalid_sensor_values": 0,
+      "masked_zone_targets": 0,
+      "rows_dropped": 0,
+      "continuous_channels_changed": 193,
+      "discrete_switches": 9290,
+      "total_reward_diagnostic_only": -356.90162469645884,
+      "worker_wall_s": 643.7877157000476,
+      "worker_collection_cpu_s": 628.546875,
+      "reused": true,
+      "producer_evidence": "original archive/manual audit",
+      "diagnostics": {
+        "delta_K_quantiles_0_1_50_99_100": [
+          -7.521484375,
+          -1.58990478515625,
+          -0.005523562431335449,
+          1.646029356718066,
+          9.321563720703125
+        ],
+        "zone_temperature_range_K": [
+          277.1197509765625,
+          303.4592592716217
+        ],
+        "extreme_examples": [
+          {
+            "step": 7497,
+            "zone": "VAV_9",
+            "time": "2023-12-01T06:45:00",
+            "next_time": "2023-12-01T06:50:00",
+            "before_K": 294.8820495605469,
+            "after_K": 287.3605650663376,
+            "delta_K": -7.521484375,
+            "valid": true
+          },
+          {
+            "step": 4012,
+            "zone": "VAV_9",
+            "time": "2023-11-19T04:20:00",
+            "next_time": "2023-11-19T04:25:00",
+            "before_K": 278.9005124568939,
+            "after_K": 288.22207629680634,
+            "delta_K": 9.321563720703125,
+            "valid": true
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "building_train_4/phoenix_8",
+      "split": "train",
+      "steps": 8640,
+      "zones": 54,
+      "observation_dim": 472,
+      "continuous_dim": 128,
+      "discrete_dim": 7,
+      "zone_transition_samples": 466560,
+      "raw_invalid_sensor_values": 0,
+      "masked_zone_targets": 0,
+      "rows_dropped": 0,
+      "continuous_channels_changed": 110,
+      "discrete_switches": 5734,
+      "total_reward_diagnostic_only": -261.27811607439526,
+      "worker_wall_s": 476.9031076999963,
+      "worker_collection_cpu_s": 465.90625,
+      "reused": true,
+      "producer_evidence": "original archive/manual audit",
+      "diagnostics": {
+        "delta_K_quantiles_0_1_50_99_100": [
+          -4.959136962890625,
+          -1.0505926024913788,
+          -0.0027161836624145508,
+          0.7886962890625,
+          8.0802001953125
+        ],
+        "zone_temperature_range_K": [
+          285.762939453125,
+          301.9291079044342
+        ],
+        "extreme_examples": [
+          {
+            "step": 4341,
+            "zone": "VAV_36",
+            "time": "2023-12-04T07:45:00",
+            "next_time": "2023-12-04T07:50:00",
+            "before_K": 300.73361217975616,
+            "after_K": 295.7744751125574,
+            "delta_K": -4.959136962890625,
+            "valid": true
+          },
+          {
+            "step": 289,
+            "zone": "VAV_23",
+            "time": "2023-11-20T06:05:00",
+            "next_time": "2023-11-20T06:10:00",
+            "before_K": 290.7025146484375,
+            "after_K": 298.78271490335464,
+            "delta_K": 8.0802001953125,
+            "valid": true
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "building_train_5/atlanta_6",
+      "split": "validation",
+      "steps": 8640,
+      "zones": 79,
+      "observation_dim": 652,
+      "continuous_dim": 184,
+      "discrete_dim": 9,
+      "zone_transition_samples": 682560,
+      "raw_invalid_sensor_values": 0,
+      "masked_zone_targets": 0,
+      "rows_dropped": 0,
+      "continuous_channels_changed": 176,
+      "discrete_switches": 15682,
+      "total_reward_diagnostic_only": -262.2360456123488,
+      "worker_wall_s": 534.1381848999881,
+      "worker_collection_cpu_s": 522.6875,
+      "reused": true,
+      "producer_evidence": "worker pin before and after",
+      "diagnostics": {
+        "delta_K_quantiles_0_1_50_99_100": [
+          -15.68310546875,
+          -2.7587045288085936,
+          0.0031128525733947754,
+          2.571689453125032,
+          14.47412109375
+        ],
+        "zone_temperature_range_K": [
+          287.69583106040955,
+          305.3385007381439
+        ],
+        "extreme_examples": [
+          {
+            "step": 1260,
+            "zone": "VAV_7",
+            "time": "2023-08-24T15:00:00",
+            "next_time": "2023-08-24T15:05:00",
+            "before_K": 305.3385007381439,
+            "after_K": 289.6553957462311,
+            "delta_K": -15.68310546875,
+            "valid": true
+          },
+          {
+            "step": 1262,
+            "zone": "VAV_7",
+            "time": "2023-08-24T15:10:00",
+            "next_time": "2023-08-24T15:15:00",
+            "before_K": 287.78317272663116,
+            "after_K": 302.2572934627533,
+            "delta_K": 14.47412109375,
+            "valid": true
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "building_train_7/singapore_6",
+      "split": "validation",
+      "steps": 8640,
+      "zones": 36,
+      "observation_dim": 334,
+      "continuous_dim": 86,
+      "discrete_dim": 5,
+      "zone_transition_samples": 311040,
+      "raw_invalid_sensor_values": 0,
+      "masked_zone_targets": 0,
+      "rows_dropped": 0,
+      "continuous_channels_changed": 82,
+      "discrete_switches": 13543,
+      "total_reward_diagnostic_only": -300.67988972858984,
+      "worker_wall_s": 219.05972119997023,
+      "worker_collection_cpu_s": 213.046875,
+      "reused": true,
+      "producer_evidence": "worker pin before and after",
+      "diagnostics": {
+        "delta_K_quantiles_0_1_50_99_100": [
+          -10.703582763671875,
+          -3.027706298828125,
+          0.024353191256523132,
+          3.009002685546875,
+          10.28082275390625
+        ],
+        "zone_temperature_range_K": [
+          287.70925879478455,
+          302.5734865665436
+        ],
+        "extreme_examples": [
+          {
+            "step": 6381,
+            "zone": "VAV_1",
+            "time": "2023-09-25T09:45:00",
+            "next_time": "2023-09-25T09:50:00",
+            "before_K": 301.27615332603455,
+            "after_K": 290.5725708603859,
+            "delta_K": -10.703582763671875,
+            "valid": true
+          },
+          {
+            "step": 877,
+            "zone": "VAV_19",
+            "time": "2023-09-06T07:05:00",
+            "next_time": "2023-09-06T07:10:00",
+            "before_K": 288.61004650592804,
+            "after_K": 298.8908690214157,
+            "delta_K": 10.28082275390625,
+            "valid": true
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "building_0500/atlanta_4",
+      "split": "generated_dev",
+      "steps": 8640,
+      "zones": 120,
+      "observation_dim": 958,
+      "continuous_dim": 278,
+      "discrete_dim": 13,
+      "zone_transition_samples": 1036800,
+      "raw_invalid_sensor_values": 0,
+      "masked_zone_targets": 0,
+      "rows_dropped": 0,
+      "continuous_channels_changed": 163,
+      "discrete_switches": 20542,
+      "total_reward_diagnostic_only": -326.5552235439027,
+      "worker_wall_s": 1777.6622617000248,
+      "worker_collection_cpu_s": 1739.84375,
+      "reused": false,
+      "producer_evidence": "worker pin before and after",
+      "diagnostics": {
+        "delta_K_quantiles_0_1_50_99_100": [
+          -5.605133056640625,
+          -1.6268622994422912,
+          0.0010985136032104492,
+          1.2506107747554782,
+          4.467315673828125
+        ],
+        "zone_temperature_range_K": [
+          290.4872742295265,
+          299.63797003030777
+        ],
+        "extreme_examples": [
+          {
+            "step": 7609,
+            "zone": "VAV_60",
+            "time": "2023-06-23T16:05:00",
+            "next_time": "2023-06-23T16:10:00",
+            "before_K": 297.81512439250946,
+            "after_K": 292.20999151468277,
+            "delta_K": -5.605133056640625,
+            "valid": true
+          },
+          {
+            "step": 7333,
+            "zone": "VAV_60",
+            "time": "2023-06-22T17:05:00",
+            "next_time": "2023-06-22T17:10:00",
+            "before_K": 290.68316638469696,
+            "after_K": 295.150482179597,
+            "delta_K": 4.467315673828125,
+            "valid": true
+          }
+        ]
+      }
+    }
+  ],
+  "quality": {
+    "raw_invalid_sensor_values": 0,
+    "masked_zone_targets": 0,
+    "rows_dropped": 0,
+    "nonfinite_values": 0,
+    "duplicate_timestamps": 0,
+    "all_steps_8640": true,
+    "all_dt_seconds_300": true,
+    "all_native_and_delta_assertions_passed": true,
+    "large_deltas": "Observed tails retained unchanged and listed per episode; validity/units do not establish physical plausibility, comfort or causal action response."
+  },
+  "runtime": {
+    "final_run_wall_s": 1786.3105932000326,
+    "final_run_new_collection_cpu_core_hours": 0.4832899305555556,
+    "reused_episode_production_cpu_core_hours": 0.6057638888888889,
+    "unique_completed_episode_collection_cpu_core_hours": 1.0890538194444446,
+    "scope": "worker collection phase via time.process_time; excludes worker imports/startup and parent validation; killed worker CPU unavailable; cpu_core_hours counts only newly collected episodes, reused production CPU is separate",
+    "total_all_attempts_cpu": "UNKNOWN: original interrupted worker has no final CPU value; imports/startup and parent validation also outside measurement"
+  },
+  "validation": {
+    "command": ".\\.venv\\Scripts\\python.exe -m team_tools.dataset data/generated/trajectories/b03-corpus-20261123-02",
+    "exit_code": 0,
+    "status": "VERIFIED_FULL_CORPUS",
+    "output": "artifacts/B03_dataset_validation_20261123.json",
+    "checks": [
+      "exact manifest scenarios and disjoint buildings",
+      "root/schema/config/episode checksums",
+      "dtype/shape/finite/chronology/labels/masks/actions",
+      "original producer lineage for reused episodes",
+      "scoped source/input/package pin for new workers",
+      "effective config replay is path-only"
+    ]
+  },
+  "tests": {
+    "command": ".\\.venv\\Scripts\\python.exe -m pytest -q --tb=short",
+    "passed": 151,
+    "subtests_passed": 29,
+    "warnings": 15,
+    "exit_code": 0,
+    "runtime_seconds": 79.53,
+    "log": "artifacts/pytest_B03_20261123.log",
+    "member_b_tests": 57,
+    "compileall_exit": 0,
+    "git_diff_check_exit": 0
+  },
+  "notebook": {
+    "status": "EXECUTED_ALL_CODE_CELLS",
+    "method": "sequential_code_cells_in_fresh_project_python_process",
+    "code_cells": 8,
+    "execution_counts": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "error_outputs": 0,
+    "python": "./.venv/Scripts/python.exe",
+    "notebook": "notebooks\\B_research.ipynb",
+    "jupyter_kernel_startup": "NOT_VERIFIED: preflight stalled; no kernel execution claimed"
+  },
+  "smoke": {
+    "official": "b03-smoke-20261123-01",
+    "official_all_15_arrays_equal_previous": true,
+    "generated": "b03-generated-smoke-20261123-01",
+    "generated_steps": 288,
+    "generated_worker_wall_s": 82.12691859999904,
+    "all_smoke_training_ready": false
+  },
+  "preserved_failures": [
+    {
+      "dataset": "b03-corpus-20261122-01",
+      "status": "PAUSED_BY_USER",
+      "reason": "User pause; three full episodes retained; partial Atlanta replayed from start"
+    },
+    {
+      "dataset": "b03-corpus-20261123-01",
+      "status": "FAILED",
+      "reason": "Five full episodes retained; generated failed at step 0 from Windows Gin path escapes"
+    }
+  ],
+  "scientific_limits": [
+    "Initial corpus only: 3 train, 2 validation and 1 generated-dev buildings; one scenario each, not complete control suites.",
+    "Climate and building shifts are confounded; no broad generalization claim.",
+    "Source-native naive timestamps preserved; no assumed UTC conversion.",
+    "VAV temperature latch is pre-thermal-solve; next sensor delta may reflect previous action.",
+    "Provisional pid_water observational data; action variation does not establish causal identifiability.",
+    "Feature D/C/K/Z changes by layout; B04 needs fixed per-zone feature schema using metadata.",
+    "B04 fit/preprocessing only on train buildings; no future observations/reward/hidden simulator state/hidden building ID at inference.",
+    "Legacy three episodes retain manual archive/hash audit, not retroactive worker pin evidence.",
+    "B02 direct evaluator/run_batch still needs portable raw generated config on Windows; full generated control suite remains unverified."
+  ],
+  "not_run": [
+    "Persistence/Ridge fitting, prediction MAE/RMSE (B04)",
+    "Full multi-scenario control scores or paired final-Base ablation",
+    "Holdout freeze/open/evaluation",
+    "A/C human cross-review",
+    "Successful Jupyter kernel startup (notebook code itself executed sequentially in fresh Python)"
+  ],
+  "changed_files_this_resume": [
+    "team_tools/dataset.py",
+    "team_tools/collect_transitions.py",
+    "tests/test_dataset_reuse.py",
+    "notebooks/B_research.ipynb",
+    "experiments/datasets.csv",
+    "team/README.md",
+    "team/B03_PLAN.md",
+    "team/B03_checks.json",
+    "team/benchmark_checks.json",
+    "team/data_dictionary.md"
+  ],
+  "local_evidence": [
+    "artifacts/b03_resume_audit_20261123.json",
+    "artifacts/b03_smoke_verification_20261123.json",
+    "artifacts/B03_pause_report_20261122.json",
+    "artifacts/B03_dataset_validation_20261123.json",
+    "artifacts/B_notebook_execution_20261123.json",
+    "artifacts/pytest_B03_20261123.log",
+    "artifacts/b03_progress.json",
+    "artifacts/B03_HANDOFF.md",
+    "artifacts/B_notebook_process_cleanup_20261123.json"
+  ],
+  "next_task": "B04: define past/current per-zone features, evaluate persistence then Ridge with building group split; check large sensor deltas and action lag before drawing conclusions.",
+  "notebook_process_cleanup": {
+    "previous_pid": 19920,
+    "status": "ALREADY_EXITED_BEFORE_TERMINATION",
+    "remaining_owned_notebook_kernel_pids": []
+  },
+  "public_export_note": "Path fields normalized/redacted; numbers, status, timestamps and original hash values preserved. Raw originals stay local."
+}
