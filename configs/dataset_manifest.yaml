@@ -1,0 +1,17 @@
+version: 1
+policy: pid_water
+policy_status: provisional
+benchmark_manifest: configs/benchmark_manifest.yaml
+episode_steps: 8640
+dt_seconds: 300
+horizon_steps: 1
+target: delta_zone_temperature_K
+split_rule: building_disjoint
+generated_dev_policy: never_fit_preprocessing_or_model_on_generated_dev
+episodes:
+  - {suite: dev_small, building: building_train_1, weather: fairbanks_1, split: train}
+  - {suite: dev_small, building: building_train_2, weather: denver_8, split: train}
+  - {suite: dev_small, building: building_train_4, weather: phoenix_8, split: train}
+  - {suite: dev_small, building: building_train_5, weather: atlanta_6, split: validation}
+  - {suite: dev_small, building: building_train_7, weather: singapore_6, split: validation}
+  - {suite: generated_dev, building: building_0500, weather: atlanta_4, split: generated_dev}

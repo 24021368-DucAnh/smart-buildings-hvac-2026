@@ -1,0 +1,731 @@
+{
+  "status": "VERIFIED_OFFLINE_BASELINE",
+  "git_sha": "3dd6b3a850354ea1eddfe58b9c8d2926f48bff31",
+  "source_sha256": "11c0a2ba7768e8460a0cac0fdf63034027d3c64013bead10e538a735c07f7ca0",
+  "dataset_manifest_sha256": "e285ef37b1133549dc5f2b6aae9c9fcae938d72ef2dd1c4099138b5a5d82362d",
+  "model_sha256": "0ab9c94df325a11755c90e90b95c9e9a3248e862eca0188e7b53e68e9687ad4d",
+  "features": [
+    "temperature_K",
+    "previous_sensor_delta_K",
+    "heating_margin_K",
+    "cooling_margin_K",
+    "damper_t",
+    "reheat_t",
+    "damper_previous",
+    "reheat_previous",
+    "ahu_supply_command_t",
+    "ahu_pressure_command_t",
+    "ahu_on_t",
+    "ahu_on_previous",
+    "hod_sin",
+    "hod_cos",
+    "dow_sin",
+    "dow_cos"
+  ],
+  "alpha": 1.0,
+  "train_samples": 1537920,
+  "split_buildings": {
+    "train": [
+      "building_train_1",
+      "building_train_2",
+      "building_train_4"
+    ],
+    "validation": [
+      "building_train_5",
+      "building_train_7"
+    ],
+    "generated_dev": [
+      "building_0500"
+    ]
+  },
+  "metrics": [
+    {
+      "building": "building_0500",
+      "weather": "atlanta_4",
+      "split": "generated_dev",
+      "model": "persistence",
+      "n": 1036800,
+      "mae_K": 0.29689704563884595,
+      "rmse_K": 0.5377113480523171
+    },
+    {
+      "building": "building_0500",
+      "weather": "atlanta_4",
+      "split": "generated_dev",
+      "model": "ridge",
+      "n": 1036800,
+      "mae_K": 0.33656669602069583,
+      "rmse_K": 0.4918731949969892
+    },
+    {
+      "building": "building_train_1",
+      "weather": "fairbanks_1",
+      "split": "train",
+      "model": "persistence",
+      "n": 336960,
+      "mae_K": 0.47341637518439666,
+      "rmse_K": 0.8722980190986185
+    },
+    {
+      "building": "building_train_1",
+      "weather": "fairbanks_1",
+      "split": "train",
+      "model": "ridge",
+      "n": 336960,
+      "mae_K": 0.46206344655587994,
+      "rmse_K": 0.8185406949887728
+    },
+    {
+      "building": "building_train_2",
+      "weather": "denver_8",
+      "split": "train",
+      "model": "persistence",
+      "n": 734400,
+      "mae_K": 0.20035329176323532,
+      "rmse_K": 0.51534051257887
+    },
+    {
+      "building": "building_train_2",
+      "weather": "denver_8",
+      "split": "train",
+      "model": "ridge",
+      "n": 734400,
+      "mae_K": 0.22921831680118135,
+      "rmse_K": 0.48451411496541286
+    },
+    {
+      "building": "building_train_4",
+      "weather": "phoenix_8",
+      "split": "train",
+      "model": "persistence",
+      "n": 466560,
+      "mae_K": 0.11258296402663887,
+      "rmse_K": 0.2705363490907239
+    },
+    {
+      "building": "building_train_4",
+      "weather": "phoenix_8",
+      "split": "train",
+      "model": "ridge",
+      "n": 466560,
+      "mae_K": 0.13790414648719748,
+      "rmse_K": 0.2630415982408542
+    },
+    {
+      "building": "building_train_5",
+      "weather": "atlanta_6",
+      "split": "validation",
+      "model": "persistence",
+      "n": 682560,
+      "mae_K": 0.4631497920405066,
+      "rmse_K": 1.043585339937164
+    },
+    {
+      "building": "building_train_5",
+      "weather": "atlanta_6",
+      "split": "validation",
+      "model": "ridge",
+      "n": 682560,
+      "mae_K": 0.4349585498168279,
+      "rmse_K": 0.9169924449308816
+    },
+    {
+      "building": "building_train_7",
+      "weather": "singapore_6",
+      "split": "validation",
+      "model": "persistence",
+      "n": 311040,
+      "mae_K": 0.5853756979297825,
+      "rmse_K": 1.089303911881262
+    },
+    {
+      "building": "building_train_7",
+      "weather": "singapore_6",
+      "split": "validation",
+      "model": "ridge",
+      "n": 311040,
+      "mae_K": 0.5531650801080091,
+      "rmse_K": 0.9552415521842175
+    }
+  ],
+  "rows_dropped": 0,
+  "runtime_s": 10.566947400002391,
+  "control_score": "NOT RUN",
+  "limitations": [
+    "Fixed observational pid_water trajectories; not causal action identification",
+    "One climate per building confounds building and climate transfer",
+    "One-step policy-visible sensor forecast; not latent physical state",
+    "No model selection on generated-dev; no frozen holdout access",
+    "No B05 control integration or guaranteed Kaggle gain"
+  ],
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "packages": {
+    "numpy": "2.0.2",
+    "matplotlib": "3.10.0",
+    "scikit-learn": "1.6.1"
+  },
+  "aggregation": "micro-average over zone transitions; per-building and per-zone rows also provided",
+  "first_step_history": "zero previous delta and previous commands; no history is available at reset",
+  "dataset_receipt_sha256": "0615e4495b8fd69c0c1ea28c32115a614008dd4d7b15144b2fcc56539e5e195a",
+  "artifact_uri": "artifacts/B04-20261125-01",
+  "main_compatibility": {
+    "main_sha": "3dd6b3a850354ea1eddfe58b9c8d2926f48bff31",
+    "diff_since_original": [
+      "team/MEMBER_A_LOG.md",
+      "team/evaluate_a.py",
+      "team/policy/__init__.py",
+      "team/policy/member_a_policy.py",
+      "team/policy/zone_controller.py"
+    ],
+    "official_source_diff": "",
+    "setpoint_units": "VERIFIED raw Kelvin in pid_plus and B01 runtime normalization audit",
+    "zone_temperature_example_K": 294.0,
+    "A_writes_only_zone_slots_fixture": true,
+    "A_mutates_incoming_action": true,
+    "open_contract_items": [
+      "A adjust mutates incoming action; composer copy boundary or A fix needed before shared integration",
+      "No enable_a / flag-off identity composer present in current main",
+      "A _command_zones delegates all zones on each AHU call; redundant repeated writes, review scaling",
+      "G1 public candidate license/source/reproduction matrix and base lock not present in main diff",
+      "B01 phase audit describes command application and delayed sensor readback separately; preserve distinction"
+    ],
+    "source_layout": "Existing B layout retained as explicitly documented in team/README.md"
+  },
+  "session_results": {
+    "status": "PARTIAL_DIAGNOSTIC",
+    "main_sha": "3dd6b3a850354ea1eddfe58b9c8d2926f48bff31",
+    "rows": [
+      {
+        "scenario": "building_train_1/fairbanks_1",
+        "policy": "member_a",
+        "total_reward": -1270.5546118362108,
+        "steps": 8640,
+        "loss": 0.14705493192548735,
+        "comfort_loss": 803.6280615225434,
+        "energy_loss": 171.99379732627423,
+        "carbon_loss": 294.93275235451296,
+        "run_id": "base-20261125-214314-8640-building_train_1-member_a",
+        "summary": "artifacts\\benchmark_runs\\base-20261125-214314-8640-building_train_1-member_a\\results\\building_train_1\\fairbanks_1\\member_a\\summary.json"
+      },
+      {
+        "scenario": "building_train_1/fairbanks_1",
+        "policy": "pid",
+        "total_reward": -1362.922295336146,
+        "steps": 8640,
+        "loss": 0.15774563603427616,
+        "comfort_loss": 477.9390671439527,
+        "energy_loss": 316.38792809341106,
+        "carbon_loss": 568.5953013197635,
+        "run_id": "base-20261125-214314-8640-building_train_1-pid",
+        "summary": "artifacts\\benchmark_runs\\base-20261125-214314-8640-building_train_1-pid\\results\\building_train_1\\fairbanks_1\\pid\\summary.json"
+      },
+      {
+        "scenario": "building_train_1/fairbanks_1",
+        "policy": "pid_water",
+        "total_reward": -2607.412790940667,
+        "steps": 8640,
+        "loss": 0.301783887840355,
+        "comfort_loss": 807.0103536377661,
+        "energy_loss": 710.057290004706,
+        "carbon_loss": 1090.345147163159,
+        "run_id": "base-20261125-214314-8640-building_train_1-pid_water",
+        "summary": "artifacts\\benchmark_runs\\base-20261125-214314-8640-building_train_1-pid_water\\results\\building_train_1\\fairbanks_1\\pid_water\\summary.json"
+      },
+      {
+        "scenario": "building_train_4/phoenix_8",
+        "policy": "pid",
+        "total_reward": -262.78716546094984,
+        "steps": 8640,
+        "loss": 0.030415181187609934,
+        "comfort_loss": 247.39542461698875,
+        "energy_loss": 11.706085089886257,
+        "carbon_loss": 3.685655848855822,
+        "run_id": "base-20261125-214314-8640-building_train_4-pid",
+        "summary": "artifacts\\benchmark_runs\\base-20261125-214314-8640-building_train_4-pid\\results\\building_train_4\\phoenix_8\\pid\\summary.json"
+      },
+      {
+        "scenario": "building_train_4/phoenix_8",
+        "policy": "pid_water",
+        "total_reward": -261.27811607439526,
+        "steps": 8640,
+        "loss": 0.03024052269379575,
+        "comfort_loss": 247.78475311403162,
+        "energy_loss": 10.230141941936745,
+        "carbon_loss": 3.2632210180039696,
+        "run_id": "base-20261125-214314-8640-building_train_4-pid_water",
+        "summary": "artifacts\\benchmark_runs\\base-20261125-214314-8640-building_train_4-pid_water\\results\\building_train_4\\phoenix_8\\pid_water\\summary.json"
+      }
+    ],
+    "paired": [
+      {
+        "scenario": "building_train_1/fairbanks_1",
+        "policy": "member_a",
+        "delta_loss_vs_pid_water": -0.15472895591486763
+      },
+      {
+        "scenario": "building_train_1/fairbanks_1",
+        "policy": "pid",
+        "delta_loss_vs_pid_water": -0.14403825180607882
+      },
+      {
+        "scenario": "building_train_1/fairbanks_1",
+        "policy": "pid_water",
+        "delta_loss_vs_pid_water": 0.0
+      },
+      {
+        "scenario": "building_train_4/phoenix_8",
+        "policy": "pid",
+        "delta_loss_vs_pid_water": 0.00017465849381418513
+      },
+      {
+        "scenario": "building_train_4/phoenix_8",
+        "policy": "pid_water",
+        "delta_loss_vs_pid_water": 0.0
+      }
+    ],
+    "expected_full_cases": 6,
+    "completed_full_cases": 5,
+    "suite_score": "NOT RUN: two-case diagnostic is not DEV-SMALL or DEV-FULL",
+    "cpu_core_hours_known": 0.6072222222222222,
+    "cpu_measurements_complete": false,
+    "cpu_scope": "Only evaluator CPU receipts for this session, excluding training/tests/analysis; missing values are not estimated.",
+    "self_report_hash_note": "Inventory excludes hashes for B04_checks.json and MAIN_B04_REVIEW.md, which this report itself updates.",
+    "jobs": [
+      {
+        "id": "base-20261125-214314-288-building_train_1-member_a",
+        "status": "SUCCEEDED_SMOKE",
+        "runtime_wall_s": 20.066,
+        "cpu_core_hours": 0.005138888888888889
+      },
+      {
+        "id": "base-20261125-214314-288-building_train_1-pid",
+        "status": "SUCCEEDED_SMOKE",
+        "runtime_wall_s": 20.724,
+        "cpu_core_hours": 0.005221354166666667
+      },
+      {
+        "id": "base-20261125-214314-288-building_train_1-pid_water",
+        "status": "SUCCEEDED_SMOKE",
+        "runtime_wall_s": 20.196,
+        "cpu_core_hours": 0.0051171875
+      },
+      {
+        "id": "base-20261125-214314-8640-building_train_1-member_a",
+        "status": "SUCCEEDED_FULL",
+        "runtime_wall_s": 356.016,
+        "cpu_core_hours": 0.09678819444444445
+      },
+      {
+        "id": "base-20261125-214314-8640-building_train_1-pid",
+        "status": "SUCCEEDED_FULL",
+        "runtime_wall_s": 350.852,
+        "cpu_core_hours": 0.09513020833333333
+      },
+      {
+        "id": "base-20261125-214314-8640-building_train_1-pid_water",
+        "status": "SUCCEEDED_FULL",
+        "runtime_wall_s": 375.684,
+        "cpu_core_hours": 0.10078559027777778
+      },
+      {
+        "id": "base-20261125-214314-8640-building_train_4-member_a",
+        "status": "TIMED_OUT",
+        "runtime_wall_s": 333.027,
+        "cpu_core_hours": null
+      },
+      {
+        "id": "base-20261125-214314-8640-building_train_4-pid",
+        "status": "SUCCEEDED_FULL",
+        "runtime_wall_s": 461.564,
+        "cpu_core_hours": 0.12498263888888889
+      },
+      {
+        "id": "base-20261125-214314-8640-building_train_4-pid_water",
+        "status": "SUCCEEDED_FULL",
+        "runtime_wall_s": 458.304,
+        "cpu_core_hours": 0.12385416666666667
+      },
+      {
+        "id": "generated-portable-smoke-20261125-01",
+        "status": "SUCCEEDED_SMOKE",
+        "runtime_wall_s": 98.734,
+        "cpu_core_hours": 0.02666232638888889
+      },
+      {
+        "id": "generated-portable-smoke-20261125-v2",
+        "status": "SUCCEEDED_SMOKE",
+        "runtime_wall_s": 87.894,
+        "cpu_core_hours": 0.023541666666666666
+      }
+    ],
+    "B_actual_file_changes": [
+      {
+        "path": "team/B04_checks.json",
+        "change": "new",
+        "sha256": null
+      },
+      {
+        "path": "team/B04_PLAN.md",
+        "change": "new",
+        "sha256": "7f4dff10dbf0ea422f90edaff56b69f89a425be9538dc4b323519564b802b87a"
+      },
+      {
+        "path": "team/MAIN_B04_REVIEW.md",
+        "change": "new",
+        "sha256": null
+      },
+      {
+        "path": "team/README.md",
+        "change": "changed",
+        "sha256": "47ebafe6011044dea0f711574abb79b8cad4d83c0a4b703921b928af2ac76896"
+      },
+      {
+        "path": "team_tools/audit_main.py",
+        "change": "new",
+        "sha256": "93fb5ce070b635306b3f0d44b49f59cbfa0ed5dc066053681e5a045a3662cedf"
+      },
+      {
+        "path": "team_tools/compare_bases.py",
+        "change": "new",
+        "sha256": "8f880c5b278d45e72ce94a4e43ab762301907a25268ddfd9941f4486bbbbad90"
+      },
+      {
+        "path": "team_tools/forecast.py",
+        "change": "new",
+        "sha256": "11c0a2ba7768e8460a0cac0fdf63034027d3c64013bead10e538a735c07f7ca0"
+      },
+      {
+        "path": "team_tools/prepare_scenarios.py",
+        "change": "new",
+        "sha256": "76acf6835a05be47b47928c341384b23b6801b76c87f21b3be97b50bda147d22"
+      },
+      {
+        "path": "tests/test_compare_bases.py",
+        "change": "new",
+        "sha256": "1a621e477ac672d11ecc703421f267d2b1b94d3593a929fcee6c01e8c0b9c749"
+      },
+      {
+        "path": "tests/test_forecast.py",
+        "change": "new",
+        "sha256": "02801143eac1589f458042b995ac6fe5e1a18c3b6d788403bc589074ae98ded4"
+      },
+      {
+        "path": "tests/test_prepare_scenarios.py",
+        "change": "new",
+        "sha256": "7712449504092bdc9300371bfa8e2bb90920916b325c316a6c1d4b0165042b6a"
+      },
+      {
+        "path": "notebooks/B_research.ipynb",
+        "change": "changed",
+        "sha256": "bf59ef9b1bee6fe6eb0bd92205bc59c8621d91989f0f6aedd5eb81d7db9e7b44"
+      },
+      {
+        "path": "experiments/forecasts.csv",
+        "change": "new",
+        "sha256": "23d5fc6ef304cc503deea4c7bc0896d420d5d114f00b5b0beee7e36205705434"
+      },
+      {
+        "path": "experiments/registry.csv",
+        "change": "changed",
+        "sha256": "2d7b5b55aca6c73deec15a510802874d15fc73e8ea6b9585219aaaa81a935460"
+      }
+    ],
+    "B03_reward_replay": {
+      "old_B03_reward": -2607.412790940667,
+      "new_main_evaluator_reward": -2607.412790940667,
+      "absolute_difference": 0.0,
+      "match_at_1e-8": true
+    },
+    "independent_review": "Two P2 findings fixed and re-reviewed; no remaining substantive scoped findings. Not human A/C signoff.",
+    "generated_portable_v2": {
+      "status": "SUCCEEDED_SMOKE",
+      "steps": 288,
+      "runtime_wall_s": 87.894,
+      "scorer_exit": 2
+    },
+    "concurrency": "Base jobs sequential. Generated smoke overlapped one Base job ~99s after CIM scheduling check failed. Peak 2 simulator processes, 1 worker/thread per process.",
+    "tests": "158 passed, 15 warnings, 29 subtests passed in 86.97s (0:01:26)",
+    "driver_lineage": "Historical parent loaded initial compare_bases.py before review fixes; initial source is archived in first run changed_files.zip. Numerical evaluator and A policies unchanged. Final expected-case audit independently checks completeness; new CLI reports budget failure explicitly.",
+    "generated_smoke_scorer_exit": 2,
+    "file_inventory_relative_to_original_B_checkout": [
+      {
+        "path": "team/B04_checks.json",
+        "change": "new",
+        "sha256": null
+      },
+      {
+        "path": "team/B04_PLAN.md",
+        "change": "new",
+        "sha256": "7f4dff10dbf0ea422f90edaff56b69f89a425be9538dc4b323519564b802b87a"
+      },
+      {
+        "path": "team/evaluate_a.py",
+        "change": "upstream_added_unchanged",
+        "sha256": "d507f61e1dcdbaa64aae1fde458f39099268abbb80c26e0f3a52ef6634b50a1b"
+      },
+      {
+        "path": "team/MAIN_B04_REVIEW.md",
+        "change": "new",
+        "sha256": null
+      },
+      {
+        "path": "team/MEMBER_A_LOG.md",
+        "change": "upstream_added_unchanged",
+        "sha256": "606b54019f97cb63463d14967b200479f98e66ba5e87bdb859670056d024b1c8"
+      },
+      {
+        "path": "team/policy/__init__.py",
+        "change": "upstream_added_unchanged",
+        "sha256": "8b923ab06686d2865df2fe290219194ba5da2ea0fdd86d59149b6049f8c981ee"
+      },
+      {
+        "path": "team/policy/member_a_policy.py",
+        "change": "upstream_added_unchanged",
+        "sha256": "c86e20e38bca2c0e9ee70fabc4ffec89ad8a169543f99086d1268482a0c7fc61"
+      },
+      {
+        "path": "team/policy/zone_controller.py",
+        "change": "upstream_added_unchanged",
+        "sha256": "efb3f63afcf5c1880c845fd1dd67247ffd9f5bfff87718dc32f8b27404341c21"
+      },
+      {
+        "path": "team/README.md",
+        "change": "changed",
+        "sha256": "47ebafe6011044dea0f711574abb79b8cad4d83c0a4b703921b928af2ac76896"
+      },
+      {
+        "path": "team_tools/audit_main.py",
+        "change": "new",
+        "sha256": "93fb5ce070b635306b3f0d44b49f59cbfa0ed5dc066053681e5a045a3662cedf"
+      },
+      {
+        "path": "team_tools/compare_bases.py",
+        "change": "new",
+        "sha256": "8f880c5b278d45e72ce94a4e43ab762301907a25268ddfd9941f4486bbbbad90"
+      },
+      {
+        "path": "team_tools/forecast.py",
+        "change": "new",
+        "sha256": "11c0a2ba7768e8460a0cac0fdf63034027d3c64013bead10e538a735c07f7ca0"
+      },
+      {
+        "path": "team_tools/prepare_scenarios.py",
+        "change": "new",
+        "sha256": "76acf6835a05be47b47928c341384b23b6801b76c87f21b3be97b50bda147d22"
+      },
+      {
+        "path": "tests/test_compare_bases.py",
+        "change": "new",
+        "sha256": "1a621e477ac672d11ecc703421f267d2b1b94d3593a929fcee6c01e8c0b9c749"
+      },
+      {
+        "path": "tests/test_forecast.py",
+        "change": "new",
+        "sha256": "02801143eac1589f458042b995ac6fe5e1a18c3b6d788403bc589074ae98ded4"
+      },
+      {
+        "path": "tests/test_prepare_scenarios.py",
+        "change": "new",
+        "sha256": "7712449504092bdc9300371bfa8e2bb90920916b325c316a6c1d4b0165042b6a"
+      },
+      {
+        "path": "notebooks/B_research.ipynb",
+        "change": "changed",
+        "sha256": "bf59ef9b1bee6fe6eb0bd92205bc59c8621d91989f0f6aedd5eb81d7db9e7b44"
+      },
+      {
+        "path": "experiments/forecasts.csv",
+        "change": "new",
+        "sha256": "23d5fc6ef304cc503deea4c7bc0896d420d5d114f00b5b0beee7e36205705434"
+      },
+      {
+        "path": "experiments/registry.csv",
+        "change": "changed",
+        "sha256": "2d7b5b55aca6c73deec15a510802874d15fc73e8ea6b9585219aaaa81a935460"
+      }
+    ],
+    "not_run": [
+      "Full five-climate DEV-SMALL",
+      "DEV-FULL 30",
+      "Full generated-dev 20",
+      "Frozen holdout",
+      "Other official policies: bang_bang/fixed_setpoint/all_off/transfer",
+      "Public candidate code/license reproduction",
+      "Kaggle acceptance/submission",
+      "B05 controller",
+      "Predictive control score",
+      "Jupyter kernel startup",
+      "Human A/C signoff"
+    ]
+  },
+  "base_review_20261126": {
+    "status": "VERIFIED_COMPLETE_TWO_CASE_DIAGNOSTIC",
+    "review_date": "2026-11-26",
+    "source_sha": "3dd6b3a850354ea1eddfe58b9c8d2926f48bff31",
+    "previous_report_sha256": "a5e1d4cedb0b2dcedca8b6db747af43f56e68f46719f4edb41480d0074c37b9f",
+    "completed_full_cases": 6,
+    "rows": [
+      {
+        "scenario": "building_train_1/fairbanks_1",
+        "policy": "member_a",
+        "total_reward": -1270.5546118362108,
+        "steps": 8640,
+        "loss": 0.14705493192548735,
+        "comfort_loss": 803.6280615225434,
+        "energy_loss": 171.99379732627423,
+        "carbon_loss": 294.93275235451296,
+        "run_id": "base-20261125-214314-8640-building_train_1-member_a",
+        "summary": "artifacts\\benchmark_runs\\base-20261125-214314-8640-building_train_1-member_a\\results\\building_train_1\\fairbanks_1\\member_a\\summary.json"
+      },
+      {
+        "scenario": "building_train_1/fairbanks_1",
+        "policy": "pid",
+        "total_reward": -1362.922295336146,
+        "steps": 8640,
+        "loss": 0.15774563603427616,
+        "comfort_loss": 477.9390671439527,
+        "energy_loss": 316.38792809341106,
+        "carbon_loss": 568.5953013197635,
+        "run_id": "base-20261125-214314-8640-building_train_1-pid",
+        "summary": "artifacts\\benchmark_runs\\base-20261125-214314-8640-building_train_1-pid\\results\\building_train_1\\fairbanks_1\\pid\\summary.json"
+      },
+      {
+        "scenario": "building_train_1/fairbanks_1",
+        "policy": "pid_water",
+        "total_reward": -2607.412790940667,
+        "steps": 8640,
+        "loss": 0.301783887840355,
+        "comfort_loss": 807.0103536377661,
+        "energy_loss": 710.057290004706,
+        "carbon_loss": 1090.345147163159,
+        "run_id": "base-20261125-214314-8640-building_train_1-pid_water",
+        "summary": "artifacts\\benchmark_runs\\base-20261125-214314-8640-building_train_1-pid_water\\results\\building_train_1\\fairbanks_1\\pid_water\\summary.json"
+      },
+      {
+        "scenario": "building_train_4/phoenix_8",
+        "policy": "pid",
+        "total_reward": -262.78716546094984,
+        "steps": 8640,
+        "loss": 0.030415181187609934,
+        "comfort_loss": 247.39542461698875,
+        "energy_loss": 11.706085089886257,
+        "carbon_loss": 3.685655848855822,
+        "run_id": "base-20261125-214314-8640-building_train_4-pid",
+        "summary": "artifacts\\benchmark_runs\\base-20261125-214314-8640-building_train_4-pid\\results\\building_train_4\\phoenix_8\\pid\\summary.json"
+      },
+      {
+        "scenario": "building_train_4/phoenix_8",
+        "policy": "pid_water",
+        "total_reward": -261.27811607439526,
+        "steps": 8640,
+        "loss": 0.03024052269379575,
+        "comfort_loss": 247.78475311403162,
+        "energy_loss": 10.230141941936745,
+        "carbon_loss": 3.2632210180039696,
+        "run_id": "base-20261125-214314-8640-building_train_4-pid_water",
+        "summary": "artifacts\\benchmark_runs\\base-20261125-214314-8640-building_train_4-pid_water\\results\\building_train_4\\phoenix_8\\pid_water\\summary.json"
+      },
+      {
+        "scenario": "building_train_4/phoenix_8",
+        "policy": "member_a",
+        "total_reward": -268.5916889383527,
+        "steps": 8640,
+        "loss": 0.031087001034531565,
+        "comfort_loss": 255.7317506014835,
+        "energy_loss": 10.021424185428486,
+        "carbon_loss": 2.8385142211425776,
+        "run_id": "base-resume-20261126-phoenix-member_a",
+        "summary": "artifacts\\benchmark_runs\\base-resume-20261126-phoenix-member_a\\results\\building_train_4\\phoenix_8\\member_a\\summary.json"
+      }
+    ],
+    "diagnostics": [
+      {
+        "policy": "pid",
+        "diagnostic_mean_two_cases": 0.09408040861094305,
+        "worst_case_loss": 0.15774563603427616,
+        "paired": [
+          {
+            "scenario": "building_train_1/fairbanks_1",
+            "delta_loss_vs_pid_water": -0.14403825180607882
+          },
+          {
+            "scenario": "building_train_4/phoenix_8",
+            "delta_loss_vs_pid_water": 0.00017465849381418513
+          }
+        ],
+        "regressed_scenarios_vs_pid_water": 1
+      },
+      {
+        "policy": "pid_water",
+        "diagnostic_mean_two_cases": 0.16601220526707536,
+        "worst_case_loss": 0.301783887840355,
+        "paired": [
+          {
+            "scenario": "building_train_1/fairbanks_1",
+            "delta_loss_vs_pid_water": 0.0
+          },
+          {
+            "scenario": "building_train_4/phoenix_8",
+            "delta_loss_vs_pid_water": 0.0
+          }
+        ],
+        "regressed_scenarios_vs_pid_water": 0
+      },
+      {
+        "policy": "member_a",
+        "diagnostic_mean_two_cases": 0.08907096648000946,
+        "worst_case_loss": 0.14705493192548735,
+        "paired": [
+          {
+            "scenario": "building_train_1/fairbanks_1",
+            "delta_loss_vs_pid_water": -0.15472895591486763
+          },
+          {
+            "scenario": "building_train_4/phoenix_8",
+            "delta_loss_vs_pid_water": 0.0008464783407358158
+          }
+        ],
+        "regressed_scenarios_vs_pid_water": 1
+      }
+    ],
+    "new_run": {
+      "id": "base-resume-20261126-phoenix-member_a",
+      "runtime_wall_s": 468.16,
+      "cpu_core_hours": 0.12472222222222222,
+      "timeout_s": 600
+    },
+    "scope": "Fixed cold/hot diagnostic only. Not full DEV-SMALL, DEV-FULL, generated-dev or Kaggle score.",
+    "G1": {
+      "status": "PREPARED_FOR_HUMAN_REVIEW_NOT_APPROVED",
+      "verified": [
+        "Official source/license provenance",
+        "Six full matched-SHA/config diagnostic cases",
+        "B01-B03 compatibility and offline B04 baseline evidence from previous session"
+      ],
+      "pending": [
+        "A enabled/disabled identity and no-input-mutation contract",
+        "Five-climate DEV-SMALL and generated-dev validation",
+        "Two public candidate source/license/reproduction audits",
+        "A/C base lock/fallback approval and C Kaggle acceptance evidence"
+      ]
+    },
+    "B04": {
+      "status": "OFFLINE_BASELINE_ONLY",
+      "forecast_source_unchanged": true,
+      "decision": "Keep persistence reference; Ridge validation improves but generated-dev MAE worsens. B05 disabled; investigate before control.",
+      "new_model_fit": false
+    },
+    "tests": "No new implementation tests run today; production code unchanged. Previous suite: 158 passed, 29 subtests, 15 dependency warnings.",
+    "not_run": [
+      "Full five-climate DEV-SMALL",
+      "DEV-FULL 30",
+      "Full generated-dev 20",
+      "Frozen holdout",
+      "Other official policies",
+      "Public candidate code reproduction",
+      "Kaggle submission",
+      "B05 controller"
+    ]
+  },
+  "public_export_note": "Path fields normalized/redacted; numbers, status, timestamps and original hash values preserved. Raw originals stay local."
+}
