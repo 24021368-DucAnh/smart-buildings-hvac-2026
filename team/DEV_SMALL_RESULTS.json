@@ -1,0 +1,464 @@
+{
+  "status": "VERIFIED_FULL_SUITE_ASSEMBLY",
+  "suite": "dev_small",
+  "source_sha": "3dd6b3a850354ea1eddfe58b9c8d2926f48bff31",
+  "manifest_sha256": "dde1c832c07bece0ee01c6538180477cc6253edc49e5f700798ec11e4a6d7101",
+  "step_count": 8640,
+  "policies": {
+    "pid": {
+      "mean_loss": 0.0694728272632442,
+      "worst_case_loss": 0.15774563603427616,
+      "scenario_count": 5,
+      "scenario_scores": [
+        {
+          "scenario": "building_train_1/fairbanks_1",
+          "total_reward": -1362.922295336146,
+          "loss": 0.15774563603427616,
+          "policy": "pid",
+          "experiment_id": "base-20261125-214314-8640-building_train_1-pid",
+          "summary_sha256": "ea384d7391a70c39a3cefb6678c650ae81cdca54c9fd055c29e4283192dedcc0",
+          "receipt_sha256": "6d5dc5f5ddca724433ca43d88dead6271728339e1117ff5d3507bf26562aa5f7",
+          "summary_binding": "observed_at_assembly_legacy"
+        },
+        {
+          "scenario": "building_train_2/denver_8",
+          "total_reward": -635.9645699174762,
+          "loss": 0.0736070104071153,
+          "policy": "pid",
+          "experiment_id": "devsmall-20261126-104838-building_train_2-denver_8-pid",
+          "summary_sha256": "5da9351227a57f08a93a8c0cdda13afd5dc04380f85760f5740007eb5c530a56",
+          "receipt_sha256": "1d6b1e3ad69ec7d71c66d90a219b189c90bb888bfdcd35ef55651cbbe6818342",
+          "summary_binding": "producer_bound"
+        },
+        {
+          "scenario": "building_train_4/phoenix_8",
+          "total_reward": -262.78716546094984,
+          "loss": 0.030415181187609934,
+          "policy": "pid",
+          "experiment_id": "base-20261125-214314-8640-building_train_4-pid",
+          "summary_sha256": "2d2005f6cc0287244894c2553aa5b4f6ce55bdce0a290a70d7b9097b0823cb22",
+          "receipt_sha256": "19604ef8a3b9190df2d535ec1017a47e9df02ba4ec0565abdebe08b7a6645542",
+          "summary_binding": "observed_at_assembly_legacy"
+        },
+        {
+          "scenario": "building_train_5/atlanta_6",
+          "total_reward": -356.9404274924309,
+          "loss": 0.04131254947829061,
+          "policy": "pid",
+          "experiment_id": "devsmall-20261126-104838-building_train_5-atlanta_6-pid",
+          "summary_sha256": "de3b22ad3ea7f8e30822cf6ec5f703e07965791572672652dd89ff9804b0545b",
+          "receipt_sha256": "94100d0f5d636463b8c6c7651c2879cedb067759f197533e20794f6720723c30",
+          "summary_binding": "producer_bound"
+        },
+        {
+          "scenario": "building_train_7/singapore_6",
+          "total_reward": -382.6116795651469,
+          "loss": 0.04428375920892904,
+          "policy": "pid",
+          "experiment_id": "devsmall-20261126-102911-building_train_7-singapore_6-pid",
+          "summary_sha256": "69df6101b904a0eea0618934572be4190a2e66d03ef40865e1e438a0a2c21bff",
+          "receipt_sha256": "e7dda6218451977f0a2a01f9dd5b3eab9727ab33d15d1deaeb47ff9f8fbc6def",
+          "summary_binding": "observed_at_assembly_legacy"
+        }
+      ],
+      "baseline_policy": "pid_water",
+      "paired": [
+        {
+          "scenario": "building_train_1/fairbanks_1",
+          "delta": -0.14403825180607882
+        },
+        {
+          "scenario": "building_train_2/denver_8",
+          "delta": 0.03229895199317331
+        },
+        {
+          "scenario": "building_train_4/phoenix_8",
+          "delta": 0.00017465849381418513
+        },
+        {
+          "scenario": "building_train_5/atlanta_6",
+          "delta": 0.010961155310194686
+        },
+        {
+          "scenario": "building_train_7/singapore_6",
+          "delta": 0.00948284604589781
+        }
+      ],
+      "mean_delta": -0.018224127992599766,
+      "wins": 1,
+      "regressions": 4,
+      "max_regression": 0.03229895199317331
+    },
+    "pid_water": {
+      "mean_loss": 0.08769695525584398,
+      "worst_case_loss": 0.301783887840355,
+      "scenario_count": 5,
+      "scenario_scores": [
+        {
+          "scenario": "building_train_1/fairbanks_1",
+          "total_reward": -2607.412790940667,
+          "loss": 0.301783887840355,
+          "policy": "pid_water",
+          "experiment_id": "base-20261125-214314-8640-building_train_1-pid_water",
+          "summary_sha256": "d4d5b8e949773255b4fc4e9b23c00697b439e75083ca490b86232ed6a400fefe",
+          "receipt_sha256": "e1a6869d7c8feb7504e62638ac23cb11b1a832d77881617b18c6a6c6b96758df",
+          "summary_binding": "observed_at_assembly_legacy"
+        },
+        {
+          "scenario": "building_train_2/denver_8",
+          "total_reward": -356.90162469645884,
+          "loss": 0.04130805841394199,
+          "policy": "pid_water",
+          "experiment_id": "devsmall-20261126-104838-building_train_2-denver_8-pid_water",
+          "summary_sha256": "6a19f561ba7da5e5cbf974675a3dd5cd67fb08f559f60ac7a320a86effc460ad",
+          "receipt_sha256": "32bab470b5a1be2d1766390dd672a74491644be9d8099e8bbcac9e24ebe5f358",
+          "summary_binding": "producer_bound"
+        },
+        {
+          "scenario": "building_train_4/phoenix_8",
+          "total_reward": -261.27811607439526,
+          "loss": 0.03024052269379575,
+          "policy": "pid_water",
+          "experiment_id": "base-20261125-214314-8640-building_train_4-pid_water",
+          "summary_sha256": "85118e0a79668d7a73e7cc64c722221ee699d18dc7da4185d0b59c89a3256ec4",
+          "receipt_sha256": "be314fd1139ba119ad4fdd774c7c3e29b664476bd045c72b18129177285b4760",
+          "summary_binding": "observed_at_assembly_legacy"
+        },
+        {
+          "scenario": "building_train_5/atlanta_6",
+          "total_reward": -262.2360456123488,
+          "loss": 0.030351394168095926,
+          "policy": "pid_water",
+          "experiment_id": "devsmall-20261126-104838-building_train_5-atlanta_6-pid_water",
+          "summary_sha256": "68c49e2d3684a54a5818805f3073920b9a00b9f4f9a5743c9a0bc9547c5d3e66",
+          "receipt_sha256": "1f0466f688351de11ba2ea1e74333a0ab30003f8f3fabf3344e8c50aa67f48b2",
+          "summary_binding": "producer_bound"
+        },
+        {
+          "scenario": "building_train_7/singapore_6",
+          "total_reward": -300.67988972858984,
+          "loss": 0.03480091316303123,
+          "policy": "pid_water",
+          "experiment_id": "devsmall-20261126-102911-building_train_7-singapore_6-pid_water",
+          "summary_sha256": "f822dc83f6506883b2ff41c972456ff539a0428e7ed282760f7bcf7d818d04b3",
+          "receipt_sha256": "f9d4c8db2b87246b7bde2adcdaa36c773dee82413d86af10cc83c6842845f572",
+          "summary_binding": "observed_at_assembly_legacy"
+        }
+      ],
+      "baseline_policy": "pid_water",
+      "paired": [
+        {
+          "scenario": "building_train_1/fairbanks_1",
+          "delta": 0.0
+        },
+        {
+          "scenario": "building_train_2/denver_8",
+          "delta": 0.0
+        },
+        {
+          "scenario": "building_train_4/phoenix_8",
+          "delta": 0.0
+        },
+        {
+          "scenario": "building_train_5/atlanta_6",
+          "delta": 0.0
+        },
+        {
+          "scenario": "building_train_7/singapore_6",
+          "delta": 0.0
+        }
+      ],
+      "mean_delta": 0.0,
+      "wins": 0,
+      "regressions": 0,
+      "max_regression": 0.0
+    },
+    "member_a": {
+      "mean_loss": 0.054143620980195616,
+      "worst_case_loss": 0.14705493192548735,
+      "scenario_count": 5,
+      "scenario_scores": [
+        {
+          "scenario": "building_train_1/fairbanks_1",
+          "total_reward": -1270.5546118362108,
+          "loss": 0.14705493192548735,
+          "policy": "member_a",
+          "experiment_id": "base-20261125-214314-8640-building_train_1-member_a",
+          "summary_sha256": "d5dca7a5d64adf6bef718c17162063d3cee05b5da243707fa5f8de7d1ac635e2",
+          "receipt_sha256": "af630fad271963c59050740428820719548fef294783aace3b53b43e352b7c94",
+          "summary_binding": "observed_at_assembly_legacy"
+        },
+        {
+          "scenario": "building_train_2/denver_8",
+          "total_reward": -378.8201655301144,
+          "loss": 0.043844926565985466,
+          "policy": "member_a",
+          "experiment_id": "devsmall-20261126-104838-building_train_2-denver_8-member_a",
+          "summary_sha256": "d80b90e4189381356366c7502c6695f3e9d06ef5942932d355e43fe4902e79aa",
+          "receipt_sha256": "dee3005adfbe49e127b3ab98bec72bc4a57514c78a11fbcf9906e2f4d1b5233a",
+          "summary_binding": "producer_bound"
+        },
+        {
+          "scenario": "building_train_4/phoenix_8",
+          "total_reward": -268.5916889383527,
+          "loss": 0.031087001034531565,
+          "policy": "member_a",
+          "experiment_id": "base-resume-20261126-phoenix-member_a",
+          "summary_sha256": "2b78d2a73d9627bedf37348905139d660f3ad25f51d4cb4fcb8f89ac3836b9ea",
+          "receipt_sha256": "25575cd7e4e54ce7ae7a9e07c63a704028e45f5e2e17bdb906432925e09c8270",
+          "summary_binding": "observed_at_assembly_legacy"
+        },
+        {
+          "scenario": "building_train_5/atlanta_6",
+          "total_reward": -188.72825796101392,
+          "loss": 0.02184354837511735,
+          "policy": "member_a",
+          "experiment_id": "devsmall-20261126-104838-building_train_5-atlanta_6-member_a",
+          "summary_sha256": "7392f2fc6a4ec6b53470fc34f9f888236cca8701f9948978296d98baee7ae3e9",
+          "receipt_sha256": "58eef20b376d102a189748c2a80142b2b2a1e368e6dcfd53f158a593971d6100",
+          "summary_binding": "producer_bound"
+        },
+        {
+          "scenario": "building_train_7/singapore_6",
+          "total_reward": -232.30970207875907,
+          "loss": 0.026887696999856374,
+          "policy": "member_a",
+          "experiment_id": "devsmall-20261126-104838-building_train_7-singapore_6-member_a",
+          "summary_sha256": "290cc649da2bb8dfb8f1715f76ff0c5c1edcbdbf67ab0f163ee7a466ccc28df0",
+          "receipt_sha256": "525aa40508d74f870af0c65c83e84751483e1e481ed1f19c53e35b77cdb3e7c8",
+          "summary_binding": "producer_bound"
+        }
+      ],
+      "baseline_policy": "pid_water",
+      "paired": [
+        {
+          "scenario": "building_train_1/fairbanks_1",
+          "delta": -0.15472895591486763
+        },
+        {
+          "scenario": "building_train_2/denver_8",
+          "delta": 0.0025368681520434727
+        },
+        {
+          "scenario": "building_train_4/phoenix_8",
+          "delta": 0.0008464783407358158
+        },
+        {
+          "scenario": "building_train_5/atlanta_6",
+          "delta": -0.008507845792978575
+        },
+        {
+          "scenario": "building_train_7/singapore_6",
+          "delta": -0.007913216163174856
+        }
+      ],
+      "mean_delta": -0.033553334275648355,
+      "wins": 3,
+      "regressions": 2,
+      "max_regression": 0.0025368681520434727
+    }
+  },
+  "rows": [
+    {
+      "scenario": "building_train_1/fairbanks_1",
+      "total_reward": -1270.5546118362108,
+      "loss": 0.14705493192548735,
+      "policy": "member_a",
+      "experiment_id": "base-20261125-214314-8640-building_train_1-member_a",
+      "summary_sha256": "d5dca7a5d64adf6bef718c17162063d3cee05b5da243707fa5f8de7d1ac635e2",
+      "receipt_sha256": "af630fad271963c59050740428820719548fef294783aace3b53b43e352b7c94",
+      "summary_binding": "observed_at_assembly_legacy",
+      "comfort_loss": 803.6280615225434,
+      "energy_loss": 171.99379732627423,
+      "carbon_loss": 294.93275235451296
+    },
+    {
+      "scenario": "building_train_1/fairbanks_1",
+      "total_reward": -1362.922295336146,
+      "loss": 0.15774563603427616,
+      "policy": "pid",
+      "experiment_id": "base-20261125-214314-8640-building_train_1-pid",
+      "summary_sha256": "ea384d7391a70c39a3cefb6678c650ae81cdca54c9fd055c29e4283192dedcc0",
+      "receipt_sha256": "6d5dc5f5ddca724433ca43d88dead6271728339e1117ff5d3507bf26562aa5f7",
+      "summary_binding": "observed_at_assembly_legacy",
+      "comfort_loss": 477.9390671439527,
+      "energy_loss": 316.38792809341106,
+      "carbon_loss": 568.5953013197635
+    },
+    {
+      "scenario": "building_train_1/fairbanks_1",
+      "total_reward": -2607.412790940667,
+      "loss": 0.301783887840355,
+      "policy": "pid_water",
+      "experiment_id": "base-20261125-214314-8640-building_train_1-pid_water",
+      "summary_sha256": "d4d5b8e949773255b4fc4e9b23c00697b439e75083ca490b86232ed6a400fefe",
+      "receipt_sha256": "e1a6869d7c8feb7504e62638ac23cb11b1a832d77881617b18c6a6c6b96758df",
+      "summary_binding": "observed_at_assembly_legacy",
+      "comfort_loss": 807.0103536377661,
+      "energy_loss": 710.057290004706,
+      "carbon_loss": 1090.345147163159
+    },
+    {
+      "scenario": "building_train_4/phoenix_8",
+      "total_reward": -262.78716546094984,
+      "loss": 0.030415181187609934,
+      "policy": "pid",
+      "experiment_id": "base-20261125-214314-8640-building_train_4-pid",
+      "summary_sha256": "2d2005f6cc0287244894c2553aa5b4f6ce55bdce0a290a70d7b9097b0823cb22",
+      "receipt_sha256": "19604ef8a3b9190df2d535ec1017a47e9df02ba4ec0565abdebe08b7a6645542",
+      "summary_binding": "observed_at_assembly_legacy",
+      "comfort_loss": 247.39542461698875,
+      "energy_loss": 11.706085089886257,
+      "carbon_loss": 3.685655848855822
+    },
+    {
+      "scenario": "building_train_4/phoenix_8",
+      "total_reward": -261.27811607439526,
+      "loss": 0.03024052269379575,
+      "policy": "pid_water",
+      "experiment_id": "base-20261125-214314-8640-building_train_4-pid_water",
+      "summary_sha256": "85118e0a79668d7a73e7cc64c722221ee699d18dc7da4185d0b59c89a3256ec4",
+      "receipt_sha256": "be314fd1139ba119ad4fdd774c7c3e29b664476bd045c72b18129177285b4760",
+      "summary_binding": "observed_at_assembly_legacy",
+      "comfort_loss": 247.78475311403162,
+      "energy_loss": 10.230141941936745,
+      "carbon_loss": 3.2632210180039696
+    },
+    {
+      "scenario": "building_train_4/phoenix_8",
+      "total_reward": -268.5916889383527,
+      "loss": 0.031087001034531565,
+      "policy": "member_a",
+      "experiment_id": "base-resume-20261126-phoenix-member_a",
+      "summary_sha256": "2b78d2a73d9627bedf37348905139d660f3ad25f51d4cb4fcb8f89ac3836b9ea",
+      "receipt_sha256": "25575cd7e4e54ce7ae7a9e07c63a704028e45f5e2e17bdb906432925e09c8270",
+      "summary_binding": "observed_at_assembly_legacy",
+      "comfort_loss": 255.7317506014835,
+      "energy_loss": 10.021424185428486,
+      "carbon_loss": 2.8385142211425776
+    },
+    {
+      "scenario": "building_train_7/singapore_6",
+      "total_reward": -382.6116795651469,
+      "loss": 0.04428375920892904,
+      "policy": "pid",
+      "experiment_id": "devsmall-20261126-102911-building_train_7-singapore_6-pid",
+      "summary_sha256": "69df6101b904a0eea0618934572be4190a2e66d03ef40865e1e438a0a2c21bff",
+      "receipt_sha256": "e7dda6218451977f0a2a01f9dd5b3eab9727ab33d15d1deaeb47ff9f8fbc6def",
+      "summary_binding": "observed_at_assembly_legacy",
+      "comfort_loss": 235.8895970222511,
+      "energy_loss": 105.6007119871676,
+      "carbon_loss": 41.1213705594244
+    },
+    {
+      "scenario": "building_train_7/singapore_6",
+      "total_reward": -300.67988972858984,
+      "loss": 0.03480091316303123,
+      "policy": "pid_water",
+      "experiment_id": "devsmall-20261126-102911-building_train_7-singapore_6-pid_water",
+      "summary_sha256": "f822dc83f6506883b2ff41c972456ff539a0428e7ed282760f7bcf7d818d04b3",
+      "receipt_sha256": "f9d4c8db2b87246b7bde2adcdaa36c773dee82413d86af10cc83c6842845f572",
+      "summary_binding": "observed_at_assembly_legacy",
+      "comfort_loss": 188.24683624570824,
+      "energy_loss": 86.81540656362031,
+      "carbon_loss": 25.617646983230955
+    },
+    {
+      "scenario": "building_train_7/singapore_6",
+      "total_reward": -232.30970207875907,
+      "loss": 0.026887696999856374,
+      "policy": "member_a",
+      "experiment_id": "devsmall-20261126-104838-building_train_7-singapore_6-member_a",
+      "summary_sha256": "290cc649da2bb8dfb8f1715f76ff0c5c1edcbdbf67ab0f163ee7a466ccc28df0",
+      "receipt_sha256": "525aa40508d74f870af0c65c83e84751483e1e481ed1f19c53e35b77cdb3e7c8",
+      "summary_binding": "producer_bound",
+      "comfort_loss": 146.19725903819761,
+      "energy_loss": 69.72087770323797,
+      "carbon_loss": 16.391565278345663
+    },
+    {
+      "scenario": "building_train_5/atlanta_6",
+      "total_reward": -356.9404274924309,
+      "loss": 0.04131254947829061,
+      "policy": "pid",
+      "experiment_id": "devsmall-20261126-104838-building_train_5-atlanta_6-pid",
+      "summary_sha256": "de3b22ad3ea7f8e30822cf6ec5f703e07965791572672652dd89ff9804b0545b",
+      "receipt_sha256": "94100d0f5d636463b8c6c7651c2879cedb067759f197533e20794f6720723c30",
+      "summary_binding": "producer_bound",
+      "comfort_loss": 230.1922225678128,
+      "energy_loss": 88.55531433018623,
+      "carbon_loss": 38.19289032026427
+    },
+    {
+      "scenario": "building_train_5/atlanta_6",
+      "total_reward": -262.2360456123488,
+      "loss": 0.030351394168095926,
+      "policy": "pid_water",
+      "experiment_id": "devsmall-20261126-104838-building_train_5-atlanta_6-pid_water",
+      "summary_sha256": "68c49e2d3684a54a5818805f3073920b9a00b9f4f9a5743c9a0bc9547c5d3e66",
+      "receipt_sha256": "1f0466f688351de11ba2ea1e74333a0ab30003f8f3fabf3344e8c50aa67f48b2",
+      "summary_binding": "producer_bound",
+      "comfort_loss": 172.48755305885652,
+      "energy_loss": 68.12330620240901,
+      "carbon_loss": 21.625186259596376
+    },
+    {
+      "scenario": "building_train_5/atlanta_6",
+      "total_reward": -188.72825796101392,
+      "loss": 0.02184354837511735,
+      "policy": "member_a",
+      "experiment_id": "devsmall-20261126-104838-building_train_5-atlanta_6-member_a",
+      "summary_sha256": "7392f2fc6a4ec6b53470fc34f9f888236cca8701f9948978296d98baee7ae3e9",
+      "receipt_sha256": "58eef20b376d102a189748c2a80142b2b2a1e368e6dcfd53f158a593971d6100",
+      "summary_binding": "producer_bound",
+      "comfort_loss": 128.45866661996388,
+      "energy_loss": 48.80799884378044,
+      "carbon_loss": 11.4615924227488
+    },
+    {
+      "scenario": "building_train_2/denver_8",
+      "total_reward": -635.9645699174762,
+      "loss": 0.0736070104071153,
+      "policy": "pid",
+      "experiment_id": "devsmall-20261126-104838-building_train_2-denver_8-pid",
+      "summary_sha256": "5da9351227a57f08a93a8c0cdda13afd5dc04380f85760f5740007eb5c530a56",
+      "receipt_sha256": "1d6b1e3ad69ec7d71c66d90a219b189c90bb888bfdcd35ef55651cbbe6818342",
+      "summary_binding": "producer_bound",
+      "comfort_loss": 450.33583816364404,
+      "energy_loss": 90.13309021354945,
+      "carbon_loss": 95.49564144516481
+    },
+    {
+      "scenario": "building_train_2/denver_8",
+      "total_reward": -356.90162469645884,
+      "loss": 0.04130805841394199,
+      "policy": "pid_water",
+      "experiment_id": "devsmall-20261126-104838-building_train_2-denver_8-pid_water",
+      "summary_sha256": "6a19f561ba7da5e5cbf974675a3dd5cd67fb08f559f60ac7a320a86effc460ad",
+      "receipt_sha256": "32bab470b5a1be2d1766390dd672a74491644be9d8099e8bbcac9e24ebe5f358",
+      "summary_binding": "producer_bound",
+      "comfort_loss": 301.8498221151531,
+      "energy_loss": 24.368599617934162,
+      "carbon_loss": 30.68320249184999
+    },
+    {
+      "scenario": "building_train_2/denver_8",
+      "total_reward": -378.8201655301144,
+      "loss": 0.043844926565985466,
+      "policy": "member_a",
+      "experiment_id": "devsmall-20261126-104838-building_train_2-denver_8-member_a",
+      "summary_sha256": "d80b90e4189381356366c7502c6695f3e9d06ef5942932d355e43fe4902e79aa",
+      "receipt_sha256": "dee3005adfbe49e127b3ab98bec72bc4a57514c78a11fbcf9906e2f4d1b5233a",
+      "summary_binding": "producer_bound",
+      "comfort_loss": 345.71036408543586,
+      "energy_loss": 15.965661092741811,
+      "carbon_loss": 17.144140176908333
+    }
+  ],
+  "provenance_note": "Legacy hashes observed at assembly, not retroactive producer binding. No historical receipt was rewritten.",
+  "updated_at_utc": "2026-11-26T06:12:53.734879+00:00",
+  "expected_cases": 15,
+  "completed_cases": 15,
+  "scope": "Fixed DEV-SMALL five scenarios, three policies; local full-suite score, not Kaggle or G1 approval.",
+  "assembler_source_sha256": "acc15d91163ab6dcce20ef5fd3c1c49a39216abe0467a6a107678addd91f5827"
+}

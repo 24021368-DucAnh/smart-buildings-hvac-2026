@@ -2,6 +2,8 @@
 
 > **Nhóm A/B/C:** [Hướng dẫn dự án và quy trình Git](team/README.md). Phần bên dưới là tài liệu starter kit chính thức.
 
+> **Nguồn code, AI và bằng chứng:** [Tri thức dự án](team/PROJECT_KNOWLEDGE.md) ghi phiên bản kế thừa, phần AI hỗ trợ, ownership, cách ghi thời gian và các gate chưa được xác nhận.
+
 
 Develop a single control policy that operates the HVAC systems of commercial
 buildings across a range of layouts and weather conditions, deciding when to

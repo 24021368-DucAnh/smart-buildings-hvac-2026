@@ -1,0 +1,64 @@
+{
+  "status": "TECHNICALLY_REVIEWED_READY_FOR_DELIVERY",
+  "date": "2026-11-26",
+  "numerical_source_sha": "3dd6b3a850354ea1eddfe58b9c8d2926f48bff31",
+  "ai_assistance": "Codex/ChatGPT generated/modified B code, tests and technical notes; Member B owns review/acceptance.",
+  "exact_ai_model_version": "NOT_RECORDED",
+  "person_hours": null,
+  "person_hours_status": "NOT_RECORDED_NO_ESTIMATE",
+  "source_urls": [
+    "https://github.com/smart-buildings-2026/starter-kit",
+    "https://github.com/24021368-DucAnh/smart-buildings-hvac-2026",
+    "https://scikit-learn.org/1.6/modules/generated/sklearn.linear_model.Ridge.html"
+  ],
+  "source_license": "Apache-2.0 official baseline; LICENSE/NOTICE preserved; no public notebook code vendored",
+  "tests": {
+    "fresh_source_summary": "179 passed, 15 warnings, 34 subtests passed in 87.10s (0:01:27)",
+    "generated_data_present": false,
+    "environment": "Reused pinned installed environment; not a clean dependency installation",
+    "test_log": "artifacts/fresh-clone-tests-final.log",
+    "notebook_cells": 9,
+    "jupyter_kernel": "NOT RUN"
+  },
+  "B03": {
+    "status": "VERIFIED_FULL_CORPUS",
+    "transitions": 51840,
+    "zone_samples": 3568320
+  },
+  "B04": "Fixed offline Ridge/persistence baseline; generated-dev MAE worse, B05 not implemented/enabled",
+  "control_suite": {
+    "status": "VERIFIED_FULL_SUITE_ASSEMBLY",
+    "assembly_exit": 0,
+    "evidence": "team/DEV_SMALL_RESULTS.json"
+  },
+  "time": {
+    "updated_utc": "2026-11-26T06:12:53.734879+00:00",
+    "assembly_wall_s": 0.8872686000031536,
+    "selected_successful_case_cpu_core_hours": 1.826467013888889,
+    "selected_successful_case_cpu_complete": true,
+    "newly_successful_case_cpu_core_hours": 1.1602039930555557,
+    "reused_successful_case_cpu_core_hours": 0.6662630208333333,
+    "newly_successful_cases": 9,
+    "reused_successful_cases": 6,
+    "interrupted_or_timed_out_cpu": "UNKNOWN; not estimated or included in the known-successful sum",
+    "scope": "Evaluator receipts only; excludes tests/training/analysis and is not lifetime project CPU or person-hours",
+    "selected_successful_case_wall_sum_s": 6759.101,
+    "newly_successful_case_wall_sum_s": 4288.521,
+    "reused_successful_case_wall_sum_s": 2470.58,
+    "new_case_window_start_utc": "2026-11-26T03:29:12.296818+00:00",
+    "new_case_window_finish_utc": "2026-11-26T04:49:22.152668+00:00",
+    "new_job_budget_wall_s": 5400,
+    "window_note": "Window includes interruption/recovery and overhead; summed evaluator wall is successful receipts only."
+  },
+  "independent_technical_review": "No remaining P1/P2 after fixes; actual tests and sanitized staged diff still required before merge",
+  "merge_authorization": "User authorized verified B delivery on 26/11/2026; no Kaggle/holdout/G1 signoff implied",
+  "G1": "NOT APPROVED; A copy/flag contract, wider generated validation, A/C base lock and C Kaggle evidence pending",
+  "not_run": [
+    "DEV-FULL30",
+    "full generated-dev20",
+    "frozen holdout",
+    "Kaggle submission",
+    "B05 control",
+    "public notebook reproduction"
+  ]
+}
