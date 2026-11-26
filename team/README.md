@@ -1,5 +1,13 @@
 # Workspace nhóm — Smart Buildings HVAC 2026
 
+## B04: chẩn đoán model đã khóa
+
+[Kết quả và giải thích residual/action/sensor phase](B04_DIAGNOSTICS.md),
+[bằng chứng số và hashes](B04_DIAGNOSTICS.json). Giữ nguyên Ridge/corpus;
+111/120zone generated0500 có MAE Ridge kém persistence. Damper readback khớp
+floor0.1 với tolerance1e-5, không chứng minh thermal response. B05 vẫn OFF.
+CLI `python -m team_tools.forecast_diagnostics` không train hay chạy simulator.
+
 ## Nộp thử Kaggle
 
 [Hướng dẫn từng bước và nguồn template](KAGGLE_TRIAL_GUIDE.md). Builder

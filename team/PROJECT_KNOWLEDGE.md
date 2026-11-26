@@ -59,6 +59,7 @@ module điều khiển chỉ khi có ablation chứng minh hữu ích.
 | `benchmark.py`, `run_batch.py`, `score_generated.py` | B mới bao quanh official evaluator/summary; công thức từ FINAL v2.1 | AI-assisted; tests âm membership/steps/NaN/duplicate, smoke/full thật |
 | `dataset.py`, `collect_transitions.py` | B mới, dùng official env/policy/metadata, lưu NPZ và provenance | AI-assisted; synthetic contract tests + corpus thật; không lấy latent state làm feature |
 | `forecast.py` | B mới triển khai Ridge chuẩn bằng NumPy, persistence và causal features | AI-assisted; đối chiếu sklearn trong test, train-only, model reload/reproduction |
+| `forecast_diagnostics.py` | B mới tái dùng validator/causal features/frozen model B04; không fit/simulator | AI-assisted; residual/slices/coverage/past-lag/readback và artifact binding tests; nguồn phase là simulator/vav/environment official |
 | `prepare_scenarios.py` | B adapter đường dẫn từ whitelist B03 | AI-assisted; giữ source, chỉ đổi đường dẫn và metrics destination, tests + generated smoke |
 | `audit_main.py`, `compare_bases.py`, `assemble_benchmark.py` | B mới, gọi lại evaluator/wrapper A/receipt | AI-assisted; audit ownership, bounded jobs, strict assembler và provenance tests |
 | `tests/*`, notebook B, manifests, registry, ghi chú B | B mới theo FINAL v2.1 và source APIs | AI-assisted; số thật lấy từ output; fixtures synthetic không phải score mô phỏng |
@@ -198,3 +199,31 @@ hidden runtime, notebook saved version và Accepted/score vẫn NOT RUN.
 Guide nêu rõ UI editor/Submit chưa xem trong tài khoản user; không đoán tên file
 output hoặc quota. C tiếp tục owner submission; AI hỗ trợ packaging/tests/guide,
 không tự nhận sáng tạo PID hoặc đã đạt thứ hạng nào.
+
+## B04 frozen-model diagnosis — 26/11/2026
+
+Task tiếp theo được user giao khi Safe đang scoring: `B04_DIAGNOSTICS.md/json`
+và CLI `team_tools.forecast_diagnostics.py`. Không đổi model/features/normalizer,
+không collect/fit/holdout hay can thiệp notebook đang nộp. Reproduce đủ12metric
+building×model cũ trong1e-10; input/source hashes kiểm tra trước/sau, no dropped rows.
+Giữ ba run diagnostic raw riêng; tổng processCPU40.546875s, không phải person-hours.
+Person-hours chưa ghi nhận; tests/previous training/Kaggle không cộng vào số này.
+
+Generated0500 Ridge MAE kém111/120zone; vùng abs(delta)<=0.1K gồm634,143mẫu:
+persistenceMAE0.011013 vs Ridge0.132188K. Ridge tốt hơn với delta>1K, giải thích
+tradeoff RMSE/MAE về mặt số học. Đây là retrospective label slices, không được
+dùng delta tương lai để chọn model/fallback lúc inference. Generated đã xem là
+development evidence, không còn là final held-out acceptance cho nghiên cứu mới.
+
+Coverage generated có114/120 reheat channel hằng. Pearson lag chỉ mô tả closed-loop
+observations, không causal effect. Reheat readback[t+1] khớp command[t]100%; damper
+khớp max(command_native,0.1)100% **trong tolerance1e-5**, không bit-exact/thermal
+response. Default floor lấy từ official VAV source, không fit từ generated data.
+Large sensor jumps còn tồn tại; B01 physical plausibility chưa đóng. Quyết định
+giữ Ridge offline/B05off, validation-led next design; chưa thử model/control mới.
+
+User screenshot trong chat26/11 cho thấy team có TransferPolicy trước đó Succeeded,
+PublicScore0.41179; bản SafePID-water Version2 vẫn Notebook Running ở thời điểm
+ảnh. Đây là USER_PROVIDED_UI_EVIDENCE, chưa có URL/version-code/runtime độc lập
+để lưu ledger đầy đủ. Không gán0.41179 cho SafePID-water/A hoặc tự ký G0/G1;
+nhận định cũ “chưa thấy bằng chứng submission nào” đã được bổ sung bằng ảnh này.
