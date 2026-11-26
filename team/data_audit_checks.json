@@ -1,0 +1,68 @@
+{
+  "source_sha": "78d8b62f6d13454dc83370b1adf7be88190b5720",
+  "policy": "pid_water (provisional)",
+  "scenarios": [
+    {
+      "scenario": "building_train_1/fairbanks_1",
+      "fields": 352,
+      "continuous_action": 92,
+      "discrete_action": 5,
+      "transitions": [
+        {
+          "t": "2023-01-01T06:00:00",
+          "next_t": "2023-01-01T06:05:00",
+          "action_dtype_discrete": "int32",
+          "action_dtype_continuous": "float32",
+          "zone_field": "VAV_1_zone_air_temperature_sensor",
+          "delta_K": 0.0,
+          "reward_finite": true,
+          "next_observation_finite": true
+        },
+        {
+          "t": "2023-01-01T06:05:00",
+          "next_t": "2023-01-01T06:10:00",
+          "action_dtype_discrete": "int32",
+          "action_dtype_continuous": "float32",
+          "zone_field": "VAV_1_zone_air_temperature_sensor",
+          "delta_K": 0.062408447265625,
+          "reward_finite": true,
+          "next_observation_finite": true
+        }
+      ],
+      "all_sensor_unit_assertions_passed": true,
+      "action_lag_note": "step applies request before wait_time; no extra command queue observed in source. Physical response/clamping is not action equality."
+    },
+    {
+      "scenario": "building_train_8/fairbanks_8",
+      "fields": 283,
+      "continuous_action": 71,
+      "discrete_action": 4,
+      "transitions": [
+        {
+          "t": "2023-10-22T06:00:00",
+          "next_t": "2023-10-22T06:05:00",
+          "action_dtype_discrete": "int32",
+          "action_dtype_continuous": "float32",
+          "zone_field": "VAV_1_zone_air_temperature_sensor",
+          "delta_K": 0.0,
+          "reward_finite": true,
+          "next_observation_finite": true
+        },
+        {
+          "t": "2023-10-22T06:05:00",
+          "next_t": "2023-10-22T06:10:00",
+          "action_dtype_discrete": "int32",
+          "action_dtype_continuous": "float32",
+          "zone_field": "VAV_1_zone_air_temperature_sensor",
+          "delta_K": 0.04406742751598358,
+          "reward_finite": true,
+          "next_observation_finite": true
+        }
+      ],
+      "all_sensor_unit_assertions_passed": true,
+      "action_lag_note": "step applies request before wait_time; no extra command queue observed in source. Physical response/clamping is not action equality."
+    }
+  ],
+  "scope": "B01 unit/chronology audit only; not control scoring, causal/action-variation evidence or B03 collection",
+  "public_export_note": "Path fields normalized/redacted; numbers, status, timestamps and original hash values preserved. Raw originals stay local."
+}

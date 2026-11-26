@@ -1,0 +1,157 @@
+version: 1
+owner: B
+upstream_sha: 1fb75606d12e016463fbc63de704967c5b2bf9d5
+full_steps: 8640
+smoke_steps: 288
+provisional_policy: pid_water
+policy_note: Official starter-kit baseline used provisionally for harness development;
+  this is not the team's final Base Policy.
+suites:
+  dev_small:
+    status: ready
+    purpose: Five fixed full-length scenarios covering the five shipped climates.
+    scenarios:
+    - building: building_train_1
+      weather: fairbanks_1
+    - building: building_train_2
+      weather: denver_8
+    - building: building_train_4
+      weather: phoenix_8
+    - building: building_train_5
+      weather: atlanta_6
+    - building: building_train_7
+      weather: singapore_6
+  dev_full:
+    status: ready
+    purpose: The official 30-pair training set; never use it as generated holdout.
+    manifest: smart_buildings/training_set.yaml
+    expected_scenarios: 30
+  generated_dev:
+    status: ready
+    seed_range_start: 500
+    candidate_seed_count: 5
+    accepted_buildings:
+    - building_0500
+    - building_0501
+    - building_0502
+    - building_0504
+    weather_strips:
+    - atlanta_4
+    - denver_1
+    - fairbanks_3
+    - phoenix_2
+    - singapore_2
+    scenarios:
+    - building: building_0500
+      weather: atlanta_4
+    - building: building_0500
+      weather: denver_1
+    - building: building_0500
+      weather: fairbanks_3
+    - building: building_0500
+      weather: phoenix_2
+    - building: building_0500
+      weather: singapore_2
+    - building: building_0501
+      weather: atlanta_4
+    - building: building_0501
+      weather: denver_1
+    - building: building_0501
+      weather: fairbanks_3
+    - building: building_0501
+      weather: phoenix_2
+    - building: building_0501
+      weather: singapore_2
+    - building: building_0502
+      weather: atlanta_4
+    - building: building_0502
+      weather: denver_1
+    - building: building_0502
+      weather: fairbanks_3
+    - building: building_0502
+      weather: phoenix_2
+    - building: building_0502
+      weather: singapore_2
+    - building: building_0504
+      weather: atlanta_4
+    - building: building_0504
+      weather: denver_1
+    - building: building_0504
+      weather: fairbanks_3
+    - building: building_0504
+      weather: phoenix_2
+    - building: building_0504
+      weather: singapore_2
+    notes: Actual official-generator outputs; rejected seeds are recorded. No simulation
+      score yet.
+    scenarios_dir: data/generated/generated_dev/scenarios
+    skipped_seeds:
+    - 503
+    generation_receipt: data/generated/generated_dev/generation.json
+    generation_receipt_sha256: 683f30ecec83af1dd58d9b75693dec44b22723365b38368a53ea86471f843d61
+  frozen_holdout:
+    status: prepared_not_frozen
+    seed_range_start: 800
+    candidate_seed_count: 5
+    accepted_buildings:
+    - building_0801
+    - building_0802
+    - building_0803
+    - building_0804
+    weather_strips:
+    - atlanta_7
+    - denver_4
+    - fairbanks_6
+    - phoenix_7
+    - singapore_5
+    scenarios:
+    - building: building_0801
+      weather: atlanta_7
+    - building: building_0801
+      weather: denver_4
+    - building: building_0801
+      weather: fairbanks_6
+    - building: building_0801
+      weather: phoenix_7
+    - building: building_0801
+      weather: singapore_5
+    - building: building_0802
+      weather: atlanta_7
+    - building: building_0802
+      weather: denver_4
+    - building: building_0802
+      weather: fairbanks_6
+    - building: building_0802
+      weather: phoenix_7
+    - building: building_0802
+      weather: singapore_5
+    - building: building_0803
+      weather: atlanta_7
+    - building: building_0803
+      weather: denver_4
+    - building: building_0803
+      weather: fairbanks_6
+    - building: building_0803
+      weather: phoenix_7
+    - building: building_0803
+      weather: singapore_5
+    - building: building_0804
+      weather: atlanta_7
+    - building: building_0804
+      weather: denver_4
+    - building: building_0804
+      weather: fairbanks_6
+    - building: building_0804
+      weather: phoenix_7
+    - building: building_0804
+      weather: singapore_5
+    locked_at: null
+    opened_at: null
+    contaminated: false
+    notes: Generated from disjoint seeds/weather; never evaluated or opened. Team
+      freeze/signoff is pending; runner must keep this closed.
+    scenarios_dir: data/generated/frozen_holdout/scenarios
+    skipped_seeds:
+    - 800
+    generation_receipt: data/generated/frozen_holdout/generation.json
+    generation_receipt_sha256: f8ef3ec2f4eac741eaa1f0de38d5d154f05acaed931d72406cfc36f2a5e18ad0

@@ -46,3 +46,6 @@ data/generated/
 .env.*
 !.env.example
 .kaggle/
+
+# Local chat handoff note; canonical public guidance is AGENTS.md and team/.
+/CONTINUE_MEMBER_B.md
