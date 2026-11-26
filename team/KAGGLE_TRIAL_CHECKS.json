@@ -1,0 +1,60 @@
+{
+  "date": "2026-11-26",
+  "status": "PREPARED_NOT_KAGGLE_VERIFIED",
+  "source_base_sha": "ed0791728fbfbccd07bf03c6509fb7f3c7306562",
+  "official_template_url": "https://www.kaggle.com/code/ayushrai1114/transferpolicy-notebook",
+  "official_template_version": 1,
+  "official_template_download_sha256": "786545a08be78ce7e9f60110297fc345a91fe1a39c8eedd4058b5444913629c5",
+  "source_and_ai_disclosure": "team/KAGGLE_TRIAL_GUIDE.md; team/PROJECT_KNOWLEDGE.md",
+  "tests": {
+    "full_suite": "185 passed, 15 warnings, 34 subtests passed in 92.16s",
+    "final_manifest_metadata_scoped": "6 passed in 0.53s",
+    "fresh_source_without_generated_data": "6 passed in 0.58s; installed environment reused",
+    "full_test_log": "artifacts/kaggle-trial-full-tests.log"
+  },
+  "exported_policy_replay": {
+    "status": "VERIFIED_EXPORTED_POLICY_REPLAY",
+    "rows": [
+      {
+        "scenario": "building_train_1/fairbanks_1",
+        "mode": "safe",
+        "consecutive_observations": 288,
+        "action_parity": "BIT_EXACT",
+        "notebook_sha256": "9994478e3a14dff007ad5f10ca3d84d144457e45babdea32e61f62a54db60f4e"
+      },
+      {
+        "scenario": "building_train_1/fairbanks_1",
+        "mode": "candidate_a",
+        "consecutive_observations": 288,
+        "action_parity": "BIT_EXACT",
+        "notebook_sha256": "a9dd41369502567088a6529745faffe97e4689b9ad0d07ae093df13373705328"
+      },
+      {
+        "scenario": "building_train_7/singapore_6",
+        "mode": "safe",
+        "consecutive_observations": 288,
+        "action_parity": "BIT_EXACT",
+        "notebook_sha256": "9994478e3a14dff007ad5f10ca3d84d144457e45babdea32e61f62a54db60f4e"
+      },
+      {
+        "scenario": "building_train_7/singapore_6",
+        "mode": "candidate_a",
+        "consecutive_observations": 288,
+        "action_parity": "BIT_EXACT",
+        "notebook_sha256": "a9dd41369502567088a6529745faffe97e4689b9ad0d07ae093df13373705328"
+      }
+    ],
+    "wall_s": 6.302455500001088,
+    "process_cpu_s": 6.375,
+    "scope": "Replay of recorded observations; no simulator step, no control score. Official Kaggle Policy base stubbed locally; server/bootstrap and Kaggle hidden runtime NOT RUN."
+  },
+  "technical_ai_review": "No material P1/P2; not human G0/G1 signoff",
+  "not_run": [
+    "Official Kaggle Policy base/bootstrap/server execution",
+    "Kaggle saved-version execution",
+    "Kaggle upload/submission",
+    "Public score/rank",
+    "G0/G1 approval"
+  ],
+  "human_person_hours": null
+}

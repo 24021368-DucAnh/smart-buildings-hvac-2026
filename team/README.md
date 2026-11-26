@@ -1,5 +1,12 @@
 # Workspace nhóm — Smart Buildings HVAC 2026
 
+## Nộp thử Kaggle
+
+[Hướng dẫn từng bước và nguồn template](KAGGLE_TRIAL_GUIDE.md). Builder
+`python -m team_tools.build_kaggle_trial --output artifacts/kaggle-trial-new-01`
+tạo hai notebook tự chứa: Safe official PID-water và candidate A. Gói chuẩn bị
+chưa phải submission được Kaggle chấm; giữ G0/G1 pending cho tới bằng chứng thật.
+
 ## Điểm bắt đầu và nguồn gốc
 
 Đọc [PROJECT_KNOWLEDGE.md](PROJECT_KNOWLEDGE.md) để biết source URL/SHA/license,

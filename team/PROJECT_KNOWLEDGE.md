@@ -175,3 +175,26 @@ B phân tích residual validation và action coverage với dữ liệu sẵn c�
 
 Latest suite: `DEV_SMALL_RESULTS.json`; code/test/time/AI evidence: `B_DELIVERY_CHECKS.json`.
 Suite status: VERIFIED_FULL_SUITE_ASSEMBLY. 179 passed, 15 warnings, 34 subtests passed in 87.10s (0:01:27). G1 remains NOT APPROVED. Git delivery references belong to actual commit/PR history; do not fabricate future SHA.
+
+## Chuẩn bị nộp thử theo yêu cầu user — 26/11/2026
+
+B01–B04 đã merge PR4, main `ed0791728fbfbccd07bf03c6509fb7f3c7306562`.
+User tiếp tục yêu cầu gói đầy đủ và hướng dẫn tự nộp. Đã chuẩn bị builder
+`team_tools/build_kaggle_trial.py` và `KAGGLE_TRIAL_GUIDE.md` để hỗ trợ C; không
+upload, tự đồng ý Rules, submit hoặc ký G0/G1 thay nhóm.
+
+Nguồn handshake thật: Ayush Rai, TransferPolicy Notebook v1 (Apache-2.0),
+https://www.kaggle.com/code/ayushrai1114/transferpolicy-notebook; Data page yêu cầu
+subclass server.Policy và chạy server.run, khác CLI evaluate.py local.
+Notebook gói embed official PID/PID-plus và candidate A với đúng source hashes,
+chỉ bỏ imports tới các class đã định nghĩa trước; wrapper do AI-assisted B viết
+kiểm tra action mà không clip/đổi điều khiển. Không đưa Ridge vào policy.
+Kaggle data/server không vendoring; license input Kaggle riêng với code Apache.
+
+Replay actual exported cells trên288 observation liên tiếp ×2building ×2policy
+khớp BIT_EXACT với code gốc. Đây là replay từ corpus có sẵn, không simulator run
+hoặc control score; base class server được stub local. Bootstrap/server/Kaggle
+hidden runtime, notebook saved version và Accepted/score vẫn NOT RUN.
+Guide nêu rõ UI editor/Submit chưa xem trong tài khoản user; không đoán tên file
+output hoặc quota. C tiếp tục owner submission; AI hỗ trợ packaging/tests/guide,
+không tự nhận sáng tạo PID hoặc đã đạt thứ hạng nào.
