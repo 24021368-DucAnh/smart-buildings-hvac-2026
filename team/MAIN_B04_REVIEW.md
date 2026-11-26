@@ -1,5 +1,9 @@
 # Đối chiếu main, B01–B03 và chuẩn bị B04 — 25/11/2026
 
+Chẩn đoán tiếp26/11: xem `B04_DIAGNOSTICS.md/json` cho frozen-model residual,
+action coverage và readback phase. Không refit hoặc bật B05; các kết quả bên
+dưới là lịch sử của baseline ban đầu và DEV-SMALL, không đổi thành thử model mới.
+
 **Đọc trạng thái mới nhất trước:** mục “B delivery / DEV-SMALL — 26/11/2026”
 ở cuối và `DEV_SMALL_RESULTS.json` đã đủ 15/15 full cases. Những mục PARTIAL,
 NOT RUN DEV-SMALL, 158 tests và “không push” bên dưới là snapshot phiên trước,
