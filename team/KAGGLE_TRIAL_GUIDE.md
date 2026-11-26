@@ -1,5 +1,10 @@
 # Nộp thử Smart Buildings — 26/11/2026
 
+**Có checkpoint A mới:** xem [submission/CHECKPOINTS.md](submission/CHECKPOINTS.md)
+và notebook pin SHA trong `submission/checkpoints/`. Hướng dẫn gói ban đầu bên
+dưới dùng A3dd6b3a; bản A_STAGE1 e2c9ae5 là snapshot riêng của nhánh chưa merge.
+Không coi nộp version mới là tự hủy/thay lượt đang scoring; kiểm tra quota team.
+
 Mục tiêu: lấy một submission được Kaggle chấm thành công, rồi mới so Safe với
 candidate A. Đây là hỗ trợ đóng gói cho phần C theo yêu cầu user, không ký G0/G1
 thay C/A. Chưa upload/submit, chưa có điểm hoặc thứ hạng Kaggle của hai notebook.

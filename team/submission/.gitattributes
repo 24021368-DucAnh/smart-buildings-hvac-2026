@@ -1,0 +1,2 @@
+# Frozen notebook checksums must match on Windows, Linux and GitHub downloads.
+checkpoints/*.ipynb text eol=lf

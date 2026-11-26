@@ -1,0 +1,186 @@
+{
+  "id": "20261126-a-stage1-e2c9ae5",
+  "updated_utc": "2026-11-26T08:31:26.927339+00:00",
+  "status": "LOCAL_CHECKED_KAGGLE_NOT_VERIFIED",
+  "recommendation": "PROVISIONAL_NEXT_SUBMISSION_CANDIDATE",
+  "policy_ref": "e2c9ae5ae73917d55e37964726393e22ceb8e040",
+  "source_main_before_verification": "6fb101e6932ba4c106c8d0d289ac8fe55a29abef",
+  "packaging_commit_sha": "0f6d5ebcc8e8fb6597d4a7b62bce925bb53d138e",
+  "upstream_sha": "1fb75606d12e016463fbc63de704967c5b2bf9d5",
+  "notebook_path": "team/submission/checkpoints/20261126-a-stage1-e2c9ae5.ipynb",
+  "notebook_sha256": "e32f19fe81489325ccef34e321c2ff8e05e494a6658a627f08d96762114cfca6",
+  "replayed_notebook_sha256": "7edccf088bb19aa727a60621646c83d5fd8d35b6333a82f48bbafee1bb5bfaa2",
+  "exported_code_cells_unchanged": true,
+  "sources": [
+    {
+      "path": "smart_buildings/baselines/pid.py",
+      "source_commit": "0f6d5ebcc8e8fb6597d4a7b62bce925bb53d138e",
+      "original_sha256": "c276046e85a147b8a1c3b02d5f609992eb2b2256b87fc27d3750ff802c14412e",
+      "embedded_sha256": "c276046e85a147b8a1c3b02d5f609992eb2b2256b87fc27d3750ff802c14412e",
+      "removed_imports": []
+    },
+    {
+      "path": "smart_buildings/baselines/pid_plus.py",
+      "source_commit": "0f6d5ebcc8e8fb6597d4a7b62bce925bb53d138e",
+      "original_sha256": "74b551b3089ce8c149054805036bf28b41fa4e979eb42b87fb202c4f215e8881",
+      "embedded_sha256": "30feea53cdadf7250d5eff9c3199f0252bab51dc7a1a2850d971d2e68e1c1770",
+      "removed_imports": [
+        "from smart_buildings.baselines.pid import PIDPolicy"
+      ]
+    },
+    {
+      "path": "team/policy/zone_controller.py",
+      "source_commit": "e2c9ae5ae73917d55e37964726393e22ceb8e040",
+      "original_sha256": "57f3bdd2aded68e760e6c24fe4a1178c2514a7a04b217a3916efe431c1848c41",
+      "embedded_sha256": "57f3bdd2aded68e760e6c24fe4a1178c2514a7a04b217a3916efe431c1848c41",
+      "removed_imports": []
+    },
+    {
+      "path": "team/policy/member_a_policy.py",
+      "source_commit": "e2c9ae5ae73917d55e37964726393e22ceb8e040",
+      "original_sha256": "ac4c5087fc80683732791b179b6771ea6f0e02d9f02ae02d97be9006f0e098c8",
+      "embedded_sha256": "b2e6359020e397e35b689a86f432cff243afb5fcd6ff4d4607f1b1b11bda3217",
+      "removed_imports": [
+        "from smart_buildings.baselines.pid_plus  import PIDWaterResetPolicy",
+        "from team.policy.zone_controller import ZoneController"
+      ]
+    }
+  ],
+  "source_inventory": {
+    "main": "B01-B04 and old A runtime; current checkpoint adds a pinned unmerged A snapshot",
+    "A": "feature/a-zone e2c9ae5,3commits beyondmain; Git authorBenn326; source copied not numerically edited",
+    "B": "harness/data/offline Ridge/diagnostics and packaging; B05/B06 OFF",
+    "C": "No C implementation found in visible Git heads/open PRs; work outside Git not assessed",
+    "legacy_setup": "Two stale chore refs have unrelated legacy history and no extra C controller; not merged"
+  },
+  "independently_verified_full_cases": [
+    {
+      "scenario": "building_train_1/fairbanks_1",
+      "run_id": "ckpt-20261126-151408-e2c9-1-fairbanks_1-8640",
+      "total_steps": 8640,
+      "total_reward": -848.131926902337,
+      "loss": 0.09816341746554827,
+      "old_a_loss": 0.14705493192548735,
+      "delta_vs_old_a": -0.048891514459939084,
+      "runtime_wall_s": 479.568,
+      "cpu_core_hours": 0.1276605902777778,
+      "producer_summary_sha256": "10013b955acee12daf879a405b8aadcdb6418dd698fb4240a2489e554b86096d",
+      "summary_sha256": "10013b955acee12daf879a405b8aadcdb6418dd698fb4240a2489e554b86096d",
+      "receipt_sha256": "e2a869c44603af1a641166d9ce21c8dc4084768cc619cd2d9e46dbc9dd42cdc1"
+    },
+    {
+      "scenario": "building_train_4/phoenix_8",
+      "run_id": "ckpt-20261126-151408-e2c9-4-phoenix_8-8640",
+      "total_steps": 8640,
+      "total_reward": -246.25184786829595,
+      "loss": 0.028501371281052772,
+      "old_a_loss": 0.031087001034531565,
+      "delta_vs_old_a": -0.0025856297534787923,
+      "runtime_wall_s": 499.359,
+      "cpu_core_hours": 0.1342795138888889,
+      "producer_summary_sha256": "fa2edd83bcf8773ab155a8ab397b9f3687b7ba206fac87f640c998649193ec55",
+      "summary_sha256": "fa2edd83bcf8773ab155a8ab397b9f3687b7ba206fac87f640c998649193ec55",
+      "receipt_sha256": "6dbf27cbcb85e18aaa9872b248b3f21628aa9cfe06194f17735f69f3f130d365"
+    }
+  ],
+  "full_case_count": 2,
+  "test_scope": "Two diagnostic cases only, not DEV-SMALL5/full30/generated-dev/Kaggle; no suite mean emitted",
+  "reported_by_A_only": {
+    "source_ref": "e2c9ae5ae73917d55e37964726393e22ceb8e040",
+    "source_path": "team/MEMBER_A_LOG.md",
+    "raw_receipts_in_git": false,
+    "suite": "building_train_1 only \u00d7 fiveweather strips; not B DEV-SMALL",
+    "reported_mean_loss_rounded": 0.05044,
+    "reported_rewards_rounded": {
+      "atlanta_2": -190.18,
+      "denver_7": -267.09,
+      "phoenix_5": -650.24,
+      "singapore_8": -223.26,
+      "fairbanks_1": -848.13
+    }
+  },
+  "broad_verified_fallback": {
+    "policy_source_sha": "3dd6b3a850354ea1eddfe58b9c8d2926f48bff31",
+    "suite": "B DEV-SMALL5differentbuildings",
+    "mean_loss": 0.054143620980195616,
+    "evidence": "team/DEV_SMALL_RESULTS.json",
+    "notebook_sha256": "9ccfc874074bc90b99c33f218af9cdddaa55551c72c2793d13a25ffb9b1a70de"
+  },
+  "replay": {
+    "status": "VERIFIED_PINNED_SOURCE_EXPORT_REPLAY",
+    "policy_ref": "e2c9ae5ae73917d55e37964726393e22ceb8e040",
+    "rows": [
+      {
+        "scenario": "building_train_1/fairbanks_1",
+        "mode": "safe",
+        "observations": 288,
+        "action_parity": "BIT_EXACT",
+        "zone_adjust_calls_per_action": null,
+        "notebook_sha256": "aff3e64d99f2a0b50fc9f088ed47cc71eaba42c89f2a9c6efeb51a6c368af8fb"
+      },
+      {
+        "scenario": "building_train_1/fairbanks_1",
+        "mode": "candidate-a",
+        "observations": 288,
+        "action_parity": "BIT_EXACT",
+        "zone_adjust_calls_per_action": 1,
+        "notebook_sha256": "7edccf088bb19aa727a60621646c83d5fd8d35b6333a82f48bbafee1bb5bfaa2"
+      },
+      {
+        "scenario": "building_train_4/phoenix_8",
+        "mode": "safe",
+        "observations": 288,
+        "action_parity": "BIT_EXACT",
+        "zone_adjust_calls_per_action": null,
+        "notebook_sha256": "aff3e64d99f2a0b50fc9f088ed47cc71eaba42c89f2a9c6efeb51a6c368af8fb"
+      },
+      {
+        "scenario": "building_train_4/phoenix_8",
+        "mode": "candidate-a",
+        "observations": 288,
+        "action_parity": "BIT_EXACT",
+        "zone_adjust_calls_per_action": 1,
+        "notebook_sha256": "7edccf088bb19aa727a60621646c83d5fd8d35b6333a82f48bbafee1bb5bfaa2"
+      }
+    ],
+    "reference": "Original A Git blobs imported as a separate temporary package snapshot; exported notebook cells executed independently",
+    "wall_s": 16.118709199996374,
+    "process_cpu_s": 15.65625,
+    "limitation": "Recorded observation replay, no new control score. Kaggle Policy base stubbed, actual Kaggle server/account runtime NOT RUN."
+  },
+  "known_integration_work": [
+    "Input action mutation",
+    "Shared enable/disable identity",
+    "reset() on existing instance does not clear A zone integrals"
+  ],
+  "reset_verification": "Fresh-instance state isolation checked; general reset() is not verified",
+  "G1": "NOT APPROVED",
+  "kaggle_public_score": null,
+  "kaggle_submission": "NOT RUN BY AGENT",
+  "user_reported_existing_submission": "Earlier TransferPolicy0.41179 succeeded; latest SafePIDwater pending at last user evidence, no account check",
+  "verification": {
+    "full_suite": "203 passed,15warnings,34subtests in100.63s",
+    "focused": "10 passed in0.93s",
+    "fresh_source_without_generated_data": "10 passed in0.97s; installed environment reused, not clean dependency install",
+    "technical_review": "Final source/artifact/registry provenance technical AI review: no remaining material P1/P2. Not human G0/G1 signoff."
+  },
+  "time": {
+    "wall_budget_s": 1500,
+    "driver_wall_s": 1020.1693434999979,
+    "successful_evaluator_cpu_core_hours": 0.2715060763888889,
+    "successful_evaluator_cpu_complete": true,
+    "successful_evaluator_wall_sum_s": 1017.384,
+    "preflight_failure": "Initial ID exceeded64chars; no evaluator launched. Preserved separately.",
+    "unknown_failed_or_timed_out_cpu": "Not estimated; excludes replay/tests/human time"
+  },
+  "ai_assistance": "Codex/ChatGPT assisted B packaging/tests/review/evidence; A code attributed to A, A AI usage not inferred",
+  "human_person_hours": null,
+  "not_run": [
+    "Kaggle checkpoint server/submission/score",
+    "Latest A full B DEV-SMALL5",
+    "DEV-FULL30",
+    "Generated-dev full20",
+    "Frozen holdout",
+    "B05 integration"
+  ]
+}

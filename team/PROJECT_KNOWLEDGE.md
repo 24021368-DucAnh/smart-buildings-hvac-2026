@@ -227,3 +227,33 @@ PublicScore0.41179; bản SafePID-water Version2 vẫn Notebook Running ở th�
 ảnh. Đây là USER_PROVIDED_UI_EVIDENCE, chưa có URL/version-code/runtime độc lập
 để lưu ledger đầy đủ. Không gán0.41179 cho SafePID-water/A hoặc tự ký G0/G1;
 nhận định cũ “chưa thấy bằng chứng submission nào” đã được bổ sung bằng ảnh này.
+
+## Checkpoint latest-A đã đối chiếu remote — 26/11/2026
+
+Audit remote mới phát hiện3commit trên `feature/a-zone` chưa có trong main6fb101e:
+72c1daf(two-stage damper/one-call wrapper),56d2329(zone PI),e2c9ae5(preconditioning
+và log5climates). Git authorBenn326; không suy AI usage hoặc giờ làm ngoài log A.
+Những đánh giá3dd6b3a trước đó vẫn đúng với source cũ, không tự gán sang A mới.
+
+Hai stale chore branches có lịch sử riêng không chung merge-base với main hiện
+tại; chỉ là setup/layout cũ, không merge chúng để “cập nhật toàn bộ”. Không thấy
+C implementation trong các heads/PR công khai của repo; không kết luận C chưa
+làm gì ngoài Git. Previous C/TransferPolicy UI score0.41179 chưa source-pinned.
+
+Builder `build_kaggle_trial --policy-ref <full40SHA>` lấy A từ immutable Git blobs,
+PID/PID-plus từ HEAD được ghi nhận, đóng gói notebook tự chứa. `checkpoint_engine`
+dùng cùng source cho evaluator độc lập. Không sửa/merge numerical files của A
+chỉ để nộp thử; checkpoint là composite source được ghi rõ, không gọi là toàn bộ
+main tự động chạy trên Kaggle. Official code source content đối chiếu1fb7560
+không đổi. B05/Ridge/online/C plant không được tự thêm vào action.
+
+Log mới của A có mean0.05044 trên5weathers cùng building1 (chưa raw receipts).
+DEV-SMALL của B là5building khác nhau; không so trực tiếp mean0.05044 với0.05414
+để nhận “best”. Bộ kiểm chứng trước checkpoint dùng replay,288smoke và2full
+diagnostic cold/hot; kết quả/recommendation ở `submission/checkpoints/`.
+
+Fresh-instance isolation được kiểm tra, không phải reset() trên instance cũ.
+Latest A inherited reset() chưa clear zone integrals, vẫn mutate input action,
+chưa có shared enable/disable identity. Các vấn đề này còn trước G1/composition;
+standalone snapshot không thay chữ ký A/C. Nộp thử checkpoint vẫn chưa có điểm
+Kaggle cho đến khi platform chấm xong; tác nhân không upload/submit trong bước này.
