@@ -152,7 +152,6 @@ Trong đó:
 - **Bản chất rút ra:**
   - Phần điểm tăng gần như toàn bộ đến từ năng lượng và carbon, không phải từ tiện nghi. Khép van gió khi sưởi làm giảm lượng gió lạnh phải hâm nóng, nên tốn ít điện quạt và ít gas cho lò hơn.
   - Phòng vẫn lạnh như trước (trung bình khoảng 16.7°C). Phần tiện nghi bây giờ chiếm khoảng 804 / 1270 điểm phạt, tức là phần lớn điểm phạt còn lại ở Fairbanks nằm ở việc phòng không đủ ấm.
-  - Hướng tiếp theo cần nhắm vào phần tiện nghi: tìm lúc nào cần mở thêm van gió để đưa thêm nhiệt vào phòng khi trời rét sâu (giới hạn khí xả 35°C nên van gió quá nhỏ thì nhiệt đưa vào cũng bị giới hạn).
 
 ---
 
@@ -185,7 +184,6 @@ Trong đó:
 
 - **Bản chất rút ra:**
   - Mở van gió lên tối đa 35% ở Nấc 2 đã tải thêm nhiệt từ cuộn sưởi vào các phòng góc như `zone_0`, kéo độ lệch trung bình của phòng tệ nhất từ 7.74 K xuống 3.02 K (nằm gọn dưới ngưỡng 5 K nên không còn bị phạt bình phương), trong khi chi phí năng lượng chỉ tăng rất ít (từ 860 lên 878.8).
-  - Hướng tiếp theo (Bước 2): Thêm khâu tích phân (PI) + chống tràn (anti-windup) cho từng phòng để kéo nhiệt độ các phòng còn lệch 1–3 K tiến sát hẳn về ngưỡng mục tiêu 294 K (20.85°C).
 
 ---
 
@@ -217,7 +215,6 @@ Trong đó:
 
 - **Bản chất rút ra:**
   - Khâu tích phân (PI) giúp kéo thêm nhiều phòng thoát khỏi sai số tĩnh (số phòng đạt >= 20.5°C tăng từ 6 lên 11 phòng), đồng thời giảm đồng loạt cả 3 thành phần: tiện nghi (-19.2% phạt), năng lượng (-4%), và carbon (-1%).
-  - Hướng tiếp theo (Bước 3): Sưởi đón đầu trước giờ làm việc (Pre-heating) và chạy đo điểm đối chứng trên đủ 5 khí hậu của `building_train_1` để kiểm tra tính tổng quát hóa sang vùng nóng.
 
 ---
 
@@ -258,4 +255,69 @@ Trong đó:
 - **Bản chất rút ra:**
   - Bộ điều khiển Chặng 1 của A thắng `pid_water` trên **5/5 khí hậu**, không bị đánh đổi giữa xứ lạnh và xứ nóng.
   - Ở xứ nóng (`phoenix_5`, `singapore_8`), khâu tích phân PI giúp kéo nhiệt độ phòng nằm gọn trong dải làm mát (giảm 43.5% phạt tiện nghi ở Phoenix và 18.1% ở Singapore), đồng thời phối hợp 2 van tránh thổi thừa gió lạnh vào sáng sớm sa mạc nên giảm thêm 33% năng lượng và 47% carbon ở Phoenix.
-  - Hoàn thành **Chặng 1 (Khung vật lý chuẩn)**; sẵn sàng bước sang **Chặng 2 (Thu thập dữ liệu từ simulator và huấn luyện mô hình ML phần dư)**.
+
+---
+
+### Ngày 26–27/11/2026
+- **Phiên 11**
+- **Thời gian:** Đợt 1: 26/11/2026 (10:53 – 11:37); Đợt 2: 27/11/2026 (01:35 – 02:39, chốt số liệu tại mốc 26/30 kịch bản)
+- **Công việc đã làm:**
+  - Chạy mở rộng bản Chặng 1 của `member_a` (đủ 8640 bước mỗi kịch bản) trên các tòa nhà còn lại trong tập 30 kịch bản (`building_train_2`, `building_train_4`, `building_train_5`, `building_train_7`, `building_train_8`).
+  - Chia 11 kịch bản còn lại sau Đợt 1 thành 3 luồng chạy song song:
+    - Luồng 1: `python -m team.evaluate_a --policies member_a --buildings building_train_2 building_train_4 --weathers singapore_1 atlanta_5 denver_2 fairbanks_4 --steps 8640`
+    - Luồng 2: `python -m team.evaluate_a --policies member_a --buildings building_train_4 building_train_5 --weathers phoenix_8 singapore_3 atlanta_6 denver_3 --steps 8640`
+    - Luồng 3: `python -m team.evaluate_a --policies member_a --buildings building_train_5 --weathers fairbanks_5 phoenix_1 singapore_4 --steps 8640`
+  - Kiểm tra và tổng hợp toàn bộ bảng điểm các vùng đã chạy xong (26/30 kịch bản) từ `summary.json`. Còn 4 kịch bản chưa hoàn thành tại thời điểm chốt bảng: `building_train_4/denver_2`, `building_train_4/fairbanks_4`, `building_train_5/denver_3`, `building_train_5/singapore_4`.
+- **Bảng tổng hợp điểm `member_a` (Chặng 1) theo 6 tòa nhà × 5 khí hậu (26/30 kịch bản, 8640 bước):**
+
+| Tòa nhà | Atlanta | Denver | Fairbanks | Phoenix | Singapore | Đã xong | Điểm TB / kịch bản | LB quy đổi |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| `building_train_1` | -190.18 (`atlanta_2`) | -267.09 (`denver_7`) | -848.13 (`fairbanks_1`) | -650.24 (`phoenix_5`) | -223.26 (`singapore_8`) | 5/5 | -435.78 | 0.05044 |
+| `building_train_2` | -155.40 (`atlanta_3`) | -344.97 (`denver_8`) | -623.74 (`fairbanks_2`) | -396.61 (`phoenix_6`) | -181.81 (`singapore_1`) | 5/5 | -340.51 | 0.03941 |
+| `building_train_4` | -230.13 (`atlanta_5`) | *(chưa xong)* | *(chưa xong)* | -246.25 (`phoenix_8`) | -236.05 (`singapore_3`) | 3/5 | -237.48 | 0.02749 |
+| `building_train_5` | -269.80 (`atlanta_6`) | *(chưa xong)* | -129.54 (`fairbanks_5`) | -273.20 (`phoenix_1`) | *(chưa xong)* | 3/5 | -224.18 | 0.02595 |
+| `building_train_7` | -379.39 (`atlanta_8`) | -270.51 (`denver_5`) | -412.80 (`fairbanks_7`) | -331.17 (`phoenix_3`) | -233.00 (`singapore_6`) | 5/5 | -325.37 | 0.03766 |
+| `building_train_8` | -231.04 (`atlanta_1`) | -159.27 (`denver_6`) | -506.78 (`fairbanks_8`) | -582.76 (`phoenix_4`) | -221.11 (`singapore_7`) | 5/5 | -340.20 | 0.03937 |
+| **Tổng hợp tạm (26/30)** | **TB -242.66 (6/6)** | **TB -260.46 (4/6)** | **TB -504.20 (5/6)** | **TB -413.37 (6/6)** | **TB -219.05 (5/6)** | **26/30** | **-330.55** | **0.03826** |
+
+- **Phân tích tỷ trọng thành phần phạt theo 5 khí hậu (trên 26 kịch bản đã xong):**
+
+| Khí hậu | Số kịch bản đã xong | Điểm TB / kịch bản | LB quy đổi | Tỷ trọng phạt tiện nghi | Tỷ trọng năng lượng + carbon |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| `atlanta` | 6/6 | -242.66 | 0.02809 | 76.6% | 23.4% |
+| `denver` | 4/6 | -260.46 | 0.03015 | 83.3% | 16.7% |
+| `fairbanks` | 5/6 | -504.20 | 0.05836 | 62.4% | 37.6% |
+| `phoenix` | 6/6 | -413.37 | 0.04784 | 65.0% | 35.0% |
+| `singapore` | 5/6 | -219.05 | 0.02535 | 59.7% | 40.3% |
+| **Toàn bộ 26 kịch bản** | **26/30** | **-330.55** | **0.03826** | **67.8%** | **32.2%** (20.0% năng lượng + 12.2% carbon) |
+
+- **Chi tiết thành phần điểm từ `summary.json` của 21 kịch bản mới chạy thêm (ngoài 5 kịch bản `building_train_1` đã ghi ở Phiên 10):**
+
+| Kịch bản | Tổng điểm | Tiện nghi (regret) | Năng lượng | Carbon | Nhiệt độ phòng TB |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| `building_train_2/atlanta_3` | -155.40 | -194.15 | 157.28 | 37.26 | 23.91°C |
+| `building_train_2/denver_8` | -344.97 | -515.46 | 83.70 | 94.75 | 21.06°C |
+| `building_train_2/fairbanks_2` | -623.74 | -862.54 | 201.07 | 330.01 | 19.81°C |
+| `building_train_2/phoenix_6` | -396.61 | -385.56 | 638.96 | 187.43 | 24.27°C |
+| `building_train_2/singapore_1` | -181.81 | -188.87 | 275.08 | 67.38 | 24.32°C |
+| `building_train_4/atlanta_5` | -230.13 | -231.84 | 369.18 | 85.92 | 24.29°C |
+| `building_train_4/phoenix_8` | -246.25 | -388.69 | 50.21 | 14.99 | 22.95°C |
+| `building_train_4/singapore_3` | -236.05 | -225.88 | 408.09 | 94.52 | 24.35°C |
+| `building_train_5/atlanta_6` | -269.80 | -297.27 | 347.93 | 109.26 | 24.02°C |
+| `building_train_5/fairbanks_5` | -129.54 | -186.37 | 71.41 | 17.18 | 23.34°C |
+| `building_train_5/phoenix_1` | -273.20 | -433.78 | 31.94 | 32.70 | 21.91°C |
+| `building_train_7/atlanta_8` | -379.39 | -543.61 | 103.28 | 162.86 | 19.80°C |
+| `building_train_7/denver_5` | -270.51 | -305.24 | 337.46 | 99.38 | 23.63°C |
+| `building_train_7/fairbanks_7` | -412.80 | -567.72 | 135.06 | 225.77 | 19.32°C |
+| `building_train_7/phoenix_3` | -331.17 | -357.99 | 454.12 | 127.74 | 24.11°C |
+| `building_train_7/singapore_6` | -233.00 | -231.87 | 376.33 | 93.05 | 24.31°C |
+| `building_train_8/atlanta_1` | -231.04 | -319.74 | 77.10 | 118.90 | 20.34°C |
+| `building_train_8/denver_6` | -159.27 | -190.34 | 182.11 | 43.22 | 23.83°C |
+| `building_train_8/fairbanks_8` | -506.78 | -402.79 | 452.78 | 872.77 | 18.10°C |
+| `building_train_8/phoenix_4` | -582.76 | -551.99 | 974.80 | 283.06 | 24.14°C |
+| `building_train_8/singapore_7` | -221.11 | -222.67 | 347.96 | 89.61 | 24.33°C |
+
+- **Bản chất rút ra:**
+  - Bộ điều khiển Chặng 1 giữ ổn định khi mở rộng sang 5 tòa nhà chưa dùng để chỉnh tham số (`building_train_2`, `4`, `5`, `7`, `8`): điểm LB quy đổi trung bình trên 26 kịch bản đạt `0.03826`, tốt hơn mức `0.05044` trên riêng `building_train_1` (vì `building_train_1` là một trong những tòa khó nhất).
+  - Phạt tiện nghi vẫn chiếm tỷ trọng lớn nhất (`67.8%` tổng phạt trên 26 kịch bản), tập trung chủ yếu ở hai vùng khắc nghiệt `fairbanks` (TB `-504.20`) và `phoenix` (TB `-413.37`).
+  - Trong cùng một khí hậu lạnh (`fairbanks`), cơ cấu phạt khác nhau rõ giữa các tòa nhà: `building_train_2/fairbanks_2` mất 83.0% ở tiện nghi (có phòng góc tụt sâu), trong khi `building_train_1/fairbanks_1` mất 57.3% ở năng lượng và carbon. Điều này cho thấy mức trần gió sưởi cố định 35% và độ nhạy làm mát cố định chưa tối ưu đồng đều cho mọi kiểu tòa nhà và trạng thái nguồn cấp.

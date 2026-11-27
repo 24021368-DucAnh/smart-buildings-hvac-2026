@@ -29,6 +29,8 @@ class ZoneController:
         integral_limit: float = 2.0,
         # Tốc độ tích phân giảm
         integral_decay: float = 0.85,
+        # Công tắc bật/tắt module A (flag-off identity)
+        enabled: bool = True,
 
     ) -> None:
         """Khởi tạo một lần cho mỗi tòa nhà.
@@ -36,6 +38,7 @@ class ZoneController:
         Args:
             building_meta_data: Metadata của tòa nhà nhận từ môi trường.
             zone_damper_full_k: Độ lệch nhiệt độ (Kelvin) để van gió mở 100%.
+            enabled: Bật/tắt can thiệp của module A; khi False trả về bản sao y nguyên action đầu vào.
         """
         self.metadata = building_meta_data
         self.zone_damper_full_k = zone_damper_full_k
@@ -45,13 +48,13 @@ class ZoneController:
         self.integral_decay = integral_decay
         self.integral_limit = integral_limit
         self.ki = ki
-
+        self.enabled = bool(enabled)
+        
         # 1. Cửa sổ nhiệt độ tiện nghi và tiết kiệm
         self.comfort_temp_window = building_meta_data["comfort_temp_window"]
         self.eco_temp_window = building_meta_data["eco_temp_window"]
         self.morning_start_hour = building_meta_data["morning_start_hour"]
         self.evening_start_hour = building_meta_data["evening_start_hour"]
-
         # 2. Thông tin giải chuẩn hóa nhiệt độ phòng
         norm_meta = building_meta_data["observation_normalization_metadata"]
         self.temp_mean = norm_meta["zone_air_temperature_sensor"]["sample_mean"]
@@ -69,9 +72,13 @@ class ZoneController:
         self.comfort_now_idx = field_names.index("comfort_mode_now") if "comfort_mode_now" in field_names else None
         # comfort_mode_soon = 1.0 nếu 60p nữa bắt đầu ca
         self.comfort_soon_idx = field_names.index("comfort_mode_soon") if "comfort_mode_soon" in field_names else None
+        # Lưu lại index của fieldname hws...
+        self.water_temp_idx = field_names.index("hws_supply_water_temperature_sensor") if "hws_supply_water_temperature_sensor" in field_names else None
 
         # 4. Ánh xạ từng phòng: (tên_vav, chỉ_số_obs, chỉ_số_damper, chỉ_số_reheat, heat_sp_idx, cool_sp_idx)
         self.zones: list[tuple[str, int, int | None, int | None, int | None, int | None]] = []
+        self.zone_ahu_sensors: dict[str, tuple[int | None, int | None, int | None]] = {}
+        self.zone_prev_temps: dict[str, float | None] = {}
         self.zone_integrals: dict[str, float] = {}
         zone_action_indices = building_meta_data["zone_action_indices"]
         zone_temp_field_index = {
@@ -79,6 +86,13 @@ class ZoneController:
             for i, name in enumerate(field_names)
             if "zone_air_temperature" in name
         }
+        vav = building_meta_data.get("ahu_zone_assignments", {})
+        vav_to_ahu = {}
+        for ahu_id, rooms in vav.items():
+            for room in rooms:
+                vav_key = room.replace("room_", "VAV_")
+                vav_to_ahu[vav_key] = ahu_id
+
 
         for vav_id, actions in zone_action_indices.items():
             temp_field = f"{vav_id}_zone_air_temperature_sensor"
@@ -98,6 +112,21 @@ class ZoneController:
                 
                 self.zones.append((vav_id, obs_idx, damper_idx, reheat_idx, heat_sp_idx, cool_sp_idx))
                 self.zone_integrals[vav_id] = 0.0
+                ahu_id = vav_to_ahu.get(vav_id)
+                if ahu_id is not None:
+                    sup_field = f"ahs_{ahu_id}_supply_air_temperature_sensor"
+                    out_field = f"ahs_{ahu_id}_outside_air_temperature_sensor"
+                    pres_field = f"ahs_{ahu_id}_supply_air_static_pressure_sensor"
+                    sup_idx = field_names.index(sup_field) if sup_field in field_names else None
+                    out_idx = field_names.index(out_field) if out_field in field_names else None
+                    pres_idx = field_names.index(pres_field) if pres_field in field_names else None
+                else:
+                    sup_idx = None
+                    out_idx = None
+                    pres_idx = None
+
+                self.zone_ahu_sensors[vav_id] = (sup_idx, out_idx, pres_idx)
+                self.zone_prev_temps[vav_id] = None
 
     def _denormalize_temp(self, normalized_val: float) -> float:
         """Đưa giá trị nhiệt độ quan sát về độ Kelvin thực tế."""
@@ -138,8 +167,20 @@ class ZoneController:
         Returns:
             Dict action đã được cập nhật vùng van phòng của A.
         """
-        continuous = action["continuous_action"]
+        # Luôn copy action đầu vào để đảm bảo không sửa tại chỗ (no-input-mutation)
+        out_action: dict[str, np.ndarray] = {
+            key: value.copy() if isinstance(value, np.ndarray) else value
+            for key, value in action.items()
+        }
+        is_enabled = self.enabled
+        if ctx is not None and "enable_a" in ctx:
+            is_enabled = bool(ctx["enable_a"])
+        if not is_enabled:
+            return out_action
+
+        continuous = out_action["continuous_action"]
         low_default, high_default = self._get_target_band(obs)
+        # Check cbi vào ca
         is_preconditioning = (
             self.comfort_now_idx is not None 
             and self.comfort_soon_idx is not None 
@@ -214,4 +255,4 @@ class ZoneController:
                     continuous[reheat_idx] = -1.0
                 if damper_idx is not None:
                     continuous[damper_idx] = -1.0
-        return action
+        return out_action
