@@ -1,5 +1,12 @@
 # Workspace nhóm — Smart Buildings HVAC 2026
 
+## Chọn checkpoint để nộp thử
+
+[Checkpoint nguồn và bằng chứng](submission/CHECKPOINTS.md) phân biệt main với
+nhánh A mới chưa merge. Bản A_STAGE1 pin `e2c9ae5`; xem JSON cạnh notebook để
+biết scope kiểm chứng và recommendation. Gói Safe/candidate ban đầu không tự
+cập nhật theo Git. B04/B05 không được tự bật và không có C policy được suy đoán.
+
 ## B04: chẩn đoán model đã khóa
 
 [Kết quả và giải thích residual/action/sensor phase](B04_DIAGNOSTICS.md),

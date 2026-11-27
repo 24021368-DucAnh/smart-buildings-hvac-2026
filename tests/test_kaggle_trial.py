@@ -54,3 +54,31 @@ def test_adapter_rejects_shape_bounds_and_nonbinary(key,value):
     exec(adapter_source('safe'),scope)
     spec={k:SimpleNamespace(shape=(1,),low=0 if k=='discrete_action' else -1,high=1) for k in ('continuous_action','discrete_action')}
     with pytest.raises(ValueError):scope['TransferPolicy']({},spec).get_action(np.zeros(1))
+
+
+def test_checkpoint_ref_requires_full_commit_before_creating_output(tmp_path):
+    with pytest.raises(ValueError,match='full commit'):
+        build(tmp_path/'bundle',policy_ref='feature/a-zone')
+    assert not (tmp_path/'bundle').exists()
+
+
+def test_explicit_ref_embeds_committed_source_not_dirty_worktree(tmp_path,monkeypatch):
+    import subprocess
+    import team_tools.build_kaggle_trial as builder
+    def git(*args):return subprocess.check_output(['git',*args],cwd=tmp_path)
+    git('init','-q')
+    names=['smart_buildings/baselines/pid.py','smart_buildings/baselines/pid_plus.py',
+        'team/policy/zone_controller.py','team/policy/member_a_policy.py']
+    for name in names:
+        path=tmp_path/name;path.parent.mkdir(parents=True,exist_ok=True)
+        imports= 'from smart_buildings.baselines.pid import PIDPolicy\n' if 'pid_plus' in name else ''
+        if 'member_a_policy' in name:imports='from smart_buildings.baselines.pid_plus  import PIDWaterResetPolicy\nfrom team.policy.zone_controller import ZoneController\n'
+        path.write_text(imports+'VERSION = "committed"\n')
+    git('add','.');git('-c','user.name=Fixture','-c','user.email=fixture@example.invalid','commit','-qm','synthetic source')
+    sha=git('rev-parse','HEAD').decode().strip()
+    (tmp_path/names[-1]).write_text('VERSION = "dirty"\n')
+    monkeypatch.setattr(builder,'ROOT',tmp_path)
+    sources,records=builder.policy_sources('candidate_a',policy_ref=sha)
+    assert 'committed' in sources[-1] and 'dirty' not in sources[-1]
+    assert records[-1]['source_commit']==sha
+    assert records[0]['source_commit']==sha
